@@ -115,27 +115,26 @@ namespace claws
     }
   };
 
-  template<class Type, class Deleter, class GroupeType, class GroupeDeleter>
-  struct GroupeHandle : private Deleter, protected Handle<GroupeType, GroupeDeleter>
+  template<class Type, class GroupType, class GroupDeleter>
+  struct GroupHandle : public Handle<GroupType, GroupDeleter>
   {
-    using Handle<GroupeType, GroupeDeleter>::Handle;
+    using Handle<GroupType, GroupDeleter>::Handle;
 
     auto operator[](std::size_t index) const
     {
-      return Handle<Type, NoDelete>(static_cast<GroupeType>(*this)[index]);
+      return Handle<Type, NoDelete>(static_cast<GroupType>(*this)[index]);
     }
 
     auto operator[](std::size_t index)
     {
-      class Proxy : public Handle<NoDelete, Type>
+      class Proxy
       {
-	friend class GroupeHandle<Type, Deleter, GroupeType, Deleter>;
+	friend class GroupHandle<Type, GroupType, GroupDeleter>;
       private:
-	GroupeHandle<Type, Deleter, GroupeType, Deleter> &groupHandle;
+	GroupHandle<Type, GroupType, GroupDeleter> &groupHandle;
 	std::size_t index;
 
-	// protected:
-	Proxy(GroupeHandle<Type, Deleter, GroupeType, Deleter> &groupHandle,
+	Proxy(GroupHandle<Type, GroupType, GroupDeleter> &groupHandle,
 	      std::size_t index)
 	  : groupHandle(groupHandle)
 	  , index(index)
@@ -149,32 +148,11 @@ namespace claws
 	}
 
 	auto &operator=(Proxy const &proxy) = delete;
+	auto &operator=(Proxy &&proxy) = delete;
 
-	auto &operator=(Proxy &&proxy)
+	operator Handle<Type, NoDelete>() const
 	{
-	  static_cast<Deleter>(groupHandle)(groupHandle[index]);
-	  groupHandle[index] = proxy.groupHandle[proxy.index];
-	  proxy.groupHandle[proxy.index] = 0;
-	  return *this;
-	}
-
-	auto &operator=(Handle<Type, Deleter> other)
-	{
-	  swap(other);
-	  return *this;
-	}
-
-	operator Handle<Type, Deleter>()
-	{
-	  Handle<Type, Deleter> handle{static_cast<Deleter>(groupHandle)};
-
-	  swap(handle);
-	  return handle;
-	}
-
-	void swap(Handle<Type, Deleter> handle)
-	{
-	  handle.swap(groupHandle[index]);
+	  return Handle<Type, NoDelete>(groupHandle[index]);
 	}
 
 	void swap(Proxy proxy)
@@ -184,55 +162,5 @@ namespace claws
       };
       return Proxy{*this, index};
     }
-
-    // template<class Type>
-    // struct Iterator
-    // {
-    //   Type &type;
-    //   std::size_t index;
-
-    //   auto operator*()
-    //   {
-    //     return type[index];
-    //   }
-
-    //   auto operator->()
-    //   {
-    //     return &type[index];
-    //   }
-
-    //   auto operator++()
-    //   {
-    //     ++index;
-    //   }
-
-    //   auto operator--()
-    //   {
-    //     --index;
-    //   }
-    // }
-
-    // auto moveAt(Handle<Type, Deleter> &handle, std::size_t index)
-    // {
-    //   Handle<Type, Deleter> out(std::move(data[index]));
-
-    //   data[index] = Type{};
-    //   hanlde = std::move(out);
-    // }
-
-    // template<class Index>
-    // auto release(Index const &index)
-    // {
-    //   auto &ref((*this)[index]);
-    //   auto result(std::move(ref));
-
-    //   ref = std::move(back())
-    //   resize(size() - 1);
-    //   return std::move(result);
-    // }
-
-    // auto acquire()
-    // {
-    // }
   };
 }
