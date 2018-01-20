@@ -1,4 +1,4 @@
-# claws library
+# claws
 C++ Utility lib
 
 Still wip.
