@@ -1,41 +1,44 @@
 #pragma once
 
-template<class Data, class Container, class Context>
-struct ContextfulContainer
+namespace claws
 {
-  Context context;
-  Container container;
-
-// public:
-//   template<class ...U>
-//   ContextfulContainer(Context context, U &&... u)
-//     : context(context)
-//     , container(std::forward<U>(u)...)
-//   {
-//   }
-
-  auto operator[](std::size_t i)
+  template<class Data, class Container, class Context>
+  struct ContextfulContainer
   {
-    return Data(container[i], context);
-  }
+    Context context;
+    Container container;
 
-  auto operator[](std::size_t i) const
-  {
-    return Data(container[i], context);
-  }
+    // public:
+    //   template<class ...U>
+    //   ContextfulContainer(Context context, U &&... u)
+    //     : context(context)
+    //     , container(std::forward<U>(u)...)
+    //   {
+    //   }
 
-  auto operator*()
-  {
-    return (*this)[0];
-  }
+    auto operator[](std::size_t i)
+    {
+      return Data(container[i], context);
+    }
 
-  auto operator*() const
-  {
-    return (*this)[0];
-  }
+    auto operator[](std::size_t i) const
+    {
+      return Data(container[i], context);
+    }
 
-  auto operator->() const
-  {
-    return &**this;
-  }
-};
+    auto operator*()
+    {
+      return (*this)[0];
+    }
+
+    auto operator*() const
+    {
+      return (*this)[0];
+    }
+
+    auto operator->() const
+    {
+      return &**this;
+    }
+  };
+}
