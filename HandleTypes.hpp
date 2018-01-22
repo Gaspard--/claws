@@ -125,42 +125,44 @@ namespace claws
       return Handle<Type, NoDelete>(static_cast<GroupType>(*this)[index]);
     }
 
-    auto operator[](std::size_t index)
-    {
-      class Proxy
-      {
-	friend class GroupHandle<Type, GroupType, GroupDeleter>;
-      private:
-	GroupHandle<Type, GroupType, GroupDeleter> &groupHandle;
-	std::size_t index;
+    // auto operator[](std::size_t index)
+    // {
+    //   class Proxy
+    //   {
+    // 	friend class GroupHandle<Type, GroupType, GroupDeleter>;
+    //   private:
+    // 	GroupType &groupHandle;
+    // 	std::size_t index;
 
-	Proxy(GroupHandle<Type, GroupType, GroupDeleter> &groupHandle,
-	      std::size_t index)
-	  : groupHandle(groupHandle)
-	  , index(index)
-	{}
+    // 	Proxy(GroupHandle<Type, GroupType, GroupDeleter> &groupHandle,
+    // 	      std::size_t index)
+    // 	  : groupHandle(groupHandle)
+    // 	  , index(index)
+    // 	{}
 	  
-      public:
-	Proxy(Proxy const &proxy)
-	{
-	  groupHandle = proxy.groupHandle;
-	  index = proxy.index;
-	}
+    //   public:
+    // 	Proxy(Proxy const &proxy)
+    // 	  : groupHandle(proxy.groupHandle)
+    // 	  , index(proxy.index)
+    // 	{
+    // 	}
 
-	auto &operator=(Proxy const &proxy) = delete;
-	auto &operator=(Proxy &&proxy) = delete;
+    // 	auto &operator=(Proxy const &proxy) = delete;
+    // 	auto &operator=(Proxy &&proxy) = delete;
 
-	operator Handle<Type, NoDelete>() const
-	{
-	  return Handle<Type, NoDelete>(groupHandle[index]);
-	}
+    // 	operator Handle<Type, NoDelete>() const
+    // 	{
+    // 	  return Handle<Type, NoDelete>(groupHandle[index]);
+    // 	}
 
-	void swap(Proxy proxy)
-	{
-	  swap(groupHandle[index], proxy.groupHandle[proxy.index]);
-	}
-      };
-      return Proxy{*this, index};
-    }
+    // 	void swap(Proxy proxy)
+    // 	{
+    // 	  using std::swap;
+
+    // 	  swap(groupHandle[index], proxy.groupHandle[proxy.index]);
+    // 	}
+    //   };
+    //   return Proxy{*this, index};
+    // }
   };
 }
