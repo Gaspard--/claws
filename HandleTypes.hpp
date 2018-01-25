@@ -8,6 +8,16 @@ namespace claws
   {
   };
 
+  // Can be moved to to 'forget' about ownership
+  struct Forget
+  {
+    template<class T>
+    constexpr void operator()(T &&) const
+    {
+    }
+  };
+
+
   template<class Type, class Deleter>
   struct Handle : private Deleter, public Type
   {
@@ -19,26 +29,26 @@ namespace claws
     {
     }
 
-    explicit Handle<Type, Deleter>(Deleter &&deleter, Type &&data)
+    explicit Handle<Type, Deleter>(Deleter &&deleter, Type &&data) noexcept(std::is_nothrow_constructible<Deleter>() && std::is_nothrow_move_constructible<Type>())
       : Deleter{std::forward<Deleter &&>(deleter)}, Type(std::forward<Type>(data))
     {
     }
 
     template<class... T, std::enable_if_t<sizeof...(T) != 1> * = nullptr>
-    explicit Handle<Type, Deleter>(Deleter &&deleter, T &&... data)
+    explicit Handle<Type, Deleter>(Deleter &&deleter, T &&... data) noexcept(std::is_nothrow_move_constructible<Deleter>() && std::is_nothrow_constructible<Type, T &&...>())
       : Deleter{std::forward<Deleter &&>(deleter)}, Type{std::forward<T>(data)...}
     {
     }
 
     template<class First, class... T, bool ok = (sizeof...(T) > 0) && !std::is_same_v<First, Deleter>, std::enable_if_t<ok> * = nullptr>
-    explicit Handle<Type, Deleter>(First &&first, T &&... data)
+    explicit Handle<Type, Deleter>(First &&first, T &&... data) noexcept(std::is_nothrow_constructible<Deleter>() && std::is_nothrow_constructible<Type, First, T &&...>())
       : Deleter{}, Type{std::forward<First>(first), std::forward<T>(data)...}
     {
     }
 
     Handle<Type, Deleter>(Handle<Type, Deleter> const &other) = delete;
 
-    Handle<Type, Deleter>(Handle<Type, Deleter> &&other) noexcept(noexcept(Deleter(std::declval<Deleter &&>())) && noexcept(Type(std::declval<Type &&>())))
+    Handle<Type, Deleter>(Handle<Type, Deleter> &&other) noexcept(std::is_nothrow_constructible<Deleter>() && std::is_nothrow_move_constructible<Type>() && std::is_nothrow_constructible<Type>() && std::is_nothrow_assignable<Type, Type>())
       : Deleter(static_cast<Deleter &&>(other)), Type(static_cast<Type &&>(other))
     {
       static_cast<Type &>(other) = Type{};
@@ -46,8 +56,8 @@ namespace claws
 
   
     template<class OtherDeleter, bool ok = !std::is_same_v<NoDelete, OtherDeleter>, std::enable_if_t<ok> * = nullptr>
-    Handle<Type, Deleter>(Handle<Type, OtherDeleter> &&other) noexcept(noexcept(Deleter(std::declval<OtherDeleter &&>())) && noexcept(Type(std::declval<Type &&>())))
-      : Deleter(static_cast<OtherDeleter &&>(other)), Type(static_cast<Type &&>(other))
+    Handle<Type, Deleter>(Handle<Type, OtherDeleter> &&other) noexcept(std::is_nothrow_move_constructible<OtherDeleter>() && std::is_nothrow_move_constructible<Type>())
+      : Deleter{}, Type(static_cast<Type &&>(other))
     {
       static_cast<Type &>(other) = Type{};
     }
@@ -73,7 +83,7 @@ namespace claws
 
     Type release()
     {
-      Type result(static_cast<Type>(*this));
+      Type result(static_cast<Type &&>(*this));
 
       static_cast<Type &>(*this) = Type{};
       return result;
@@ -122,7 +132,7 @@ namespace claws
 
     auto operator[](std::size_t index) const
     {
-      return Handle<Type, NoDelete>(static_cast<GroupType>(*this)[index]);
+      return Handle<Type, NoDelete>(static_cast<GroupType const &>(*this)[index]);
     }
 
     // auto operator[](std::size_t index)
