@@ -235,19 +235,5 @@ namespace claws
 	i = i + 1;
       return (i == dim);
     }
-
-    using Data = decltype(data);
-
-    constexpr operator Data & ()
-    {
-      return (data);
-    }
-
-    constexpr operator Data const & () const
-    {
-      return (data);
-    }
-
-    
   };
 }
