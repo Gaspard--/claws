@@ -1,6 +1,7 @@
 #pragma once
 
 # include <type_traits>
+# include <utility>
 # include <math.h>
 
 namespace claws
@@ -25,7 +26,19 @@ namespace claws
     {
     }
 
+    template<class Func, std::size_t... indices>
+    static auto applyOp(Func &&func, std::index_sequence<indices...>)
+    {
+      return Vect{func(indices)...};
+    }
+
   public:
+    template<class Func>
+    static Vect<dim, T> applyOp(Func &&func)
+    {
+      return applyOp(func, std::make_index_sequence<dim>{});
+    }
+
     template<class V>
     constexpr Vect(V const (&other)[dim])
       : Vect(other, std::make_index_sequence<dim>{})
@@ -75,12 +88,12 @@ namespace claws
 	data[i] = op(i);
     }
 
-    constexpr T &operator[](unsigned int index)
+    constexpr T &operator[](std::size_t index)
     {
       return (data[index]);
     }
 
-    constexpr T const &operator[](unsigned int index) const
+    constexpr T const &operator[](std::size_t index) const
     {
       return (data[index]);
     }
@@ -95,7 +108,7 @@ namespace claws
     };									\
 									\
     template<class U>							\
-    constexpr auto operator OP(Vect<dim, U> const &other)		\
+    constexpr auto operator OP(Vect<dim, U> const &other) const		\
     {									\
       Vect<dim, decltype(data[0] OP other[0])> result{*this};		\
 									\
@@ -112,7 +125,7 @@ namespace claws
     };									\
 									\
     template<class U>							\
-    constexpr auto operator OP(U const &other)				\
+    constexpr auto operator OP(U const &other) const		        \
     {									\
       Vect<dim, decltype(data[0] OP other)> result{*this};		\
 									\
@@ -232,5 +245,7 @@ namespace claws
     {
       return (data);
     }
+
+    
   };
 }
