@@ -17,7 +17,7 @@ namespace claws
 
     template<class V, std::size_t... indices>
     constexpr Vect(V const &other, std::index_sequence<indices...>)
-    : Vect(other[indices]...)
+    : data{static_cast<T>(other[indices])...}
     {
     }
 
