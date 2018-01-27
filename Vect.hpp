@@ -48,7 +48,7 @@ namespace claws
 
     template<class V>
     constexpr Vect(Vect<dim, V> const &other)
-    : Vect(other.data, std::make_index_sequence<dim>{})
+    : Vect(other, std::make_index_sequence<dim>{})
     {
     }
 
