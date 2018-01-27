@@ -3,6 +3,7 @@
 # include <type_traits>
 # include <utility>
 # include <math.h>
+# include <cstddef>
 
 namespace claws
 {
@@ -14,13 +15,13 @@ namespace claws
   private:
     T data[dim];
 
-    template<class V, size_t... indices>
+    template<class V, std::size_t... indices>
     constexpr Vect(V const (&other)[dim], std::index_sequence<indices...>)
     : Vect(other[indices]...)
     {
     }
 
-    template<size_t... indices>
+    template<std::size_t... indices>
     constexpr Vect(std::index_sequence<indices...>)
       : Vect(((void)indices, T{})...)
     {
@@ -102,7 +103,7 @@ namespace claws
     template<class U>							\
     constexpr Vect<dim, T>& operator OP##=(Vect<dim, U> const &other)	\
     {									\
-      for (size_t i(0u); i != dim; ++i)					\
+      for (std::size_t i(0u); i != dim; ++i)					\
 	data[i] OP##= other[i];						\
       return (*this);							\
     };									\
