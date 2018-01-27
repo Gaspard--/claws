@@ -34,11 +34,6 @@ namespace claws
     }
 
   public:
-    constexpr std::size_t size() const
-    {
-      return dim;
-    }
-    
     template<class Func>
     static Vect<dim, T> applyOp(Func &&func)
     {
@@ -46,10 +41,15 @@ namespace claws
     }
 
     template<class V>
-    constexpr Vect(V const &other)
+    constexpr Vect(V const (&other)[dim])
       : Vect(other, std::make_index_sequence<dim>{})
     {
-      static_assert(other.size() == size(), "Can't assign different size vects");
+    }
+
+    template<class V>
+    constexpr Vect(Vect<dim, V> const &other)
+    : Vect(other.data, std::make_index_sequence<dim>{})
+    {
     }
 
     constexpr Vect()
