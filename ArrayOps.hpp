@@ -43,9 +43,15 @@ namespace claws
     ARRAY_OPERATOR_DEF(>>);
 
     template<class Mapper, class T, std::size_t dim, std::size_t... indices>
-    constexpr std::array<T, dim> map(Mapper mapper, std::array<T, dim> const &src, std::index_sequence<indices...>)
+    constexpr auto map(Mapper mapper, std::array<T, dim> const &src, std::index_sequence<indices...>)
     {
-      return {mapper(src[indices])...};
+      return std::array<decltype(mapper(std::declval<T const &>())), dim>{mapper(src[indices])...};
+    }
+
+    template<class Mapper, class T, std::size_t dim>
+    constexpr auto  map(Mapper mapper, std::array<T, dim> const &src)
+    {
+      return map(mapper, src, std::make_index_sequence<dim>{});
     }
 
 #define ARRAY_UNARY_OP_DEF(OP)						\
