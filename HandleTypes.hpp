@@ -19,7 +19,7 @@ namespace claws
 
 
   template<class Type, class Deleter>
-  struct Handle : private Deleter, public Type
+  struct Handle : public Deleter, public Type
   {
     Handle<Type, Deleter>() = default;
 
@@ -72,12 +72,10 @@ namespace claws
     }
 
     template<class OtherDeleter>
-    Handle<Type, Deleter> &operator=(Handle<Type, OtherDeleter> other)
+    Handle<Type, Deleter> &operator=(Handle<Type, OtherDeleter> const other)
     {
-      using std::swap;
-
-      swap(static_cast<Type &>(*this), static_cast<Type &>(other));
-      swap(static_cast<Deleter &>(*this), static_cast<OtherDeleter &>(other));
+      static_cast<Type &>(*this) = static_cast<Type &&>(other);
+      static_cast<Deleter &>(*this) = static_cast<OtherDeleter &&>(other);
       return *this;
     }
 
@@ -100,6 +98,11 @@ namespace claws
     {
       static_cast<Deleter &>(*this)(static_cast<Type &>(*this));
       static_cast<Type &>(*this) = {type};
+    }
+
+    auto const &getDeleter() const
+    {
+      return static_cast<Deleter &>(*this);
     }
 
     ~Handle<Type, Deleter>()
