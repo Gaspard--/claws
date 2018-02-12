@@ -37,6 +37,16 @@ namespace claws
     return lh OP##= rh;							\
   };									\
 
+
+#define ARRAY_UNARY_OP_DEF(OP)						\
+  template<class T, std::size_t dim>					\
+  constexpr std::array<T, dim> operator OP(std::array<T, dim> array)	\
+  {									\
+    for (auto &t : array)						\
+      t = OP t;								\
+    return array;							\
+  }									\
+
   template<class Mapper, class T, std::size_t dim, std::size_t... indices>
   constexpr auto map(Mapper mapper, std::array<T, dim> const &src, std::index_sequence<indices...>)
   {
@@ -49,14 +59,15 @@ namespace claws
     return map(mapper, src, std::make_index_sequence<dim>{});
   }
 
-#define ARRAY_UNARY_OP_DEF(OP)						\
-  template<class T, std::size_t dim>					\
-  constexpr std::array<T, dim> operator OP(std::array<T, dim> array)	\
-  {									\
-    for (auto &t : array)						\
-      t = OP t;								\
-    return array;							\
-  }									\
+  template<class T, std::size_t dim>
+  constexpr auto scalar(std::array<T, dim> const &lh, std::array<T, dim> const &rh)
+  {
+    T result{};
+
+    for (std::size_t i(0u); i < dim; ++i)
+      result += lh[i] * rh[i];
+    return result;
+  }
 
   namespace arrayOps
   {
