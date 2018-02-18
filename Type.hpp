@@ -11,6 +11,7 @@ namespace claws
     static DestTemplate<T...> convert(SrcTemplate<T...>);
 
   public:
+    ~CopyParamPack() = delete;
     using Type = decltype(convert(std::declval<Src>()));
   };
 
