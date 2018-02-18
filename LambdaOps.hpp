@@ -25,7 +25,7 @@ namespace claws
     struct Composition : private Op1, private Op2
     {
       Composition(Op1 lh, Op2 rh)
-	: Op1(lh), Op2(lh)
+	: Op1(lh), Op2(rh)
       {
       }
 
