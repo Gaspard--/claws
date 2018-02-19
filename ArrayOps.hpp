@@ -69,6 +69,16 @@ namespace claws
     return result;
   }
 
+  template<class T, std::size_t dim>
+  constexpr auto length2(std::array<T, dim> const &val)
+  {
+    T result{};
+
+    for (auto const &elem : val)
+      result += elem * elem;
+    return result;
+  }
+
   namespace arrayOps
   {
     ARRAY_OPERATOR_DEF(+);
