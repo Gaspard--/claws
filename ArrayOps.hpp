@@ -60,7 +60,7 @@ namespace claws
   }
 
   template<class T, std::size_t dim>
-  constexpr auto scalar(std::array<T, dim> const &lh, std::array<T, dim> const &rh)
+  constexpr auto scalar(std::array<T, dim> const &lh, std::array<T, dim> const &rh) noexcept
   {
     T result{};
 
@@ -70,13 +70,22 @@ namespace claws
   }
 
   template<class T, std::size_t dim>
-  constexpr auto length2(std::array<T, dim> const &val)
+  constexpr auto length2(std::array<T, dim> const &val) noexcept
   {
     T result{};
 
     for (auto const &elem : val)
       result += elem * elem;
     return result;
+  }
+
+  template<class T, std::size_t dim>
+  constexpr auto equals(std::array<T, dim> const &lh, std::array<T, dim> const &rh) noexcept
+  {
+    for (std::size_t i(0u); i < dim; ++i)
+      if (lh[i] != rh[i])
+	return false;
+    return true;
   }
 
   namespace arrayOps

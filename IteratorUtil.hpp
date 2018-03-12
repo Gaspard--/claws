@@ -112,4 +112,41 @@ namespace claws
 
     return ContainerView{begin, end, func};
   }
+
+  template<class T>
+  struct SameValIterator
+  {
+    T *t;
+
+    SameValIterator(T &t)
+      : t(&t)
+    {
+    }
+
+    SameValIterator() = default;
+    SameValIterator(SameValIterator const &) = default;
+    SameValIterator(SameValIterator &&) = default;
+    SameValIterator &operator=(SameValIterator const &) = default;
+    SameValIterator &operator=(SameValIterator &&) = default;
+
+    auto &operator*() const
+    {
+      return *t;
+    }
+
+    auto &operator[](std::size_t) const
+    {
+      return *t;
+    }
+
+    auto &operator++()
+    {
+      return *this;
+    }
+
+    auto operator++(int)
+    {
+      return *this;
+    }
+  };
 }

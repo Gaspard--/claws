@@ -2,8 +2,9 @@
 
 namespace claws {
   template<class Iterator>
-  class CircularIterator : private Iterator
+  class CircularIterator
   {
+    Iterator current;
     Iterator begin;
     Iterator end;
 
@@ -11,7 +12,7 @@ namespace claws {
     constexpr CircularIterator<Iterator>(Iterator begin,
 					 Iterator end,
 					 Iterator pos)
-      : Iterator(pos),
+      : current(pos),
 	begin(begin),
 	end(end)
     {
@@ -24,30 +25,47 @@ namespace claws {
 
     constexpr CircularIterator<Iterator> operator++()
     {
-      ++static_cast<Iterator &>(*this);
-      if (static_cast<Iterator &>(*this) == end)
-	static_cast<Iterator &>(*this) = begin;
+      ++current;
+      if (current == end)
+	current = begin;
       return *this;
     }
 
-    using Iterator::operator*;
-    using Iterator::operator->;
+    decltype(auto) operator*()
+    {
+      return *current;
+    }
+
+    decltype(auto) operator*() const
+    {
+      return *current;
+    }
+
+    decltype(auto) operator->()
+    {
+      return current;
+    }
+
+    decltype(auto) operator->() const
+    {
+      return current;
+    }
 
     template<class Other>
     constexpr bool operator==(Other const &other) const
     {
-      return static_cast<Iterator const &>(*this) == other;
+      return current == other;
     }
 
     template<class Other>
     constexpr bool operator!=(Other const &other) const
     {
-      return static_cast<Iterator const &>(*this) != other;
+      return current != other;
     }
 
     constexpr operator Iterator() const noexcept
     {
-      return static_cast<Iterator>(*this);
+      return current;
     }
   };
 
