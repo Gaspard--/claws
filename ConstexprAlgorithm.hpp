@@ -7,9 +7,9 @@ namespace claws
   {
     while (begin != end)
       {
-	*out = *begin;
-	++begin;
-	++out;
+        *out = *begin;
+        ++begin;
+        ++out;
       }
     return out;
   }

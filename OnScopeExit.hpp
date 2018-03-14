@@ -12,22 +12,21 @@ namespace claws
       std::optional<Func> func;
 
       Ret(Func func)
-	: func(std::make_optional(func))
-      {
-      }
+        : func(std::make_optional(func))
+      {}
 
       Ret(Ret const &ret) = delete;
 
       Ret(Ret &&ret)
-	: func(ret.func)
+        : func(ret.func)
       {
-	ret.func.reset();
+        ret.func.reset();
       };
 
       ~Ret()
       {
-	if (func)
-	  (*func)();
+        if (func)
+          (*func)();
       }
     };
 

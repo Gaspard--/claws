@@ -1,6 +1,7 @@
 #pragma once
 
-namespace claws {
+namespace claws
+{
   template<class Iterator>
   class CircularIterator
   {
@@ -9,17 +10,13 @@ namespace claws {
     Iterator end;
 
   public:
-    constexpr CircularIterator<Iterator>(Iterator begin,
-					 Iterator end,
-					 Iterator pos)
-      : current(pos),
-	begin(begin),
-	end(end)
-    {
-    }
+    constexpr CircularIterator<Iterator>(Iterator begin, Iterator end, Iterator pos)
+      : current(pos)
+      , begin(begin)
+      , end(end)
+    {}
 
-    constexpr CircularIterator<Iterator>(Iterator begin,
-					 Iterator end)
+    constexpr CircularIterator<Iterator>(Iterator begin, Iterator end)
       : CircularIterator<Iterator>(begin, end, begin)
     {}
 
@@ -27,7 +24,7 @@ namespace claws {
     {
       ++current;
       if (current == end)
-	current = begin;
+        current = begin;
       return *this;
     }
 
@@ -41,12 +38,12 @@ namespace claws {
       return *current;
     }
 
-    decltype(auto) operator->()
+    decltype(auto) operator-> ()
     {
       return current;
     }
 
-    decltype(auto) operator->() const
+    decltype(auto) operator-> () const
     {
       return current;
     }

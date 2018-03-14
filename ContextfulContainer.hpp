@@ -36,7 +36,7 @@ namespace claws
       return (*this)[0];
     }
 
-    auto operator->() const
+    auto operator-> () const
     {
       return &**this;
     }

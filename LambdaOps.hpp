@@ -8,9 +8,9 @@ namespace claws
     struct Overload : private Op1, private Op2
     {
       constexpr Overload(Op1 lh, Op2 rh)
-	: Op1(lh), Op2(rh)
-      {
-      }
+        : Op1(lh)
+        , Op2(rh)
+      {}
       using Op1::operator();
       using Op2::operator();
     };
@@ -25,20 +25,20 @@ namespace claws
     struct Composition : private Op1, private Op2
     {
       constexpr Composition(Op1 lh, Op2 rh)
-	: Op1(lh), Op2(rh)
-      {
-      }
+        : Op1(lh)
+        , Op2(rh)
+      {}
 
       template<class... Params>
       constexpr auto operator()(Params &&... params)
       {
-	return Op1::operator()(Op2::operator()(std::forward<Params>(params)...));
+        return Op1::operator()(Op2::operator()(std::forward<Params>(params)...));
       }
 
       template<class... Params>
       constexpr auto operator()(Params &&... params) const
       {
-	return Op1::operator()(Op2::operator()(std::forward<Params>(params)...));
+        return Op1::operator()(Op2::operator()(std::forward<Params>(params)...));
       }
     };
 
