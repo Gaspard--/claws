@@ -3,9 +3,9 @@
 namespace claws
 {
   template<class Func, class IT>
-  constexpr auto containerView(IT begin, IT end, Func func)
+  constexpr auto container_view(IT begin, IT end, Func func)
   {
-    struct ContainerView
+    struct container_view
     {
       struct iterator
       {
@@ -68,7 +68,7 @@ namespace claws
 
         constexpr auto operator-> () const
         {
-          struct SelfPointerLike
+          struct self_pointer_like
           {
             decltype(func(*it)) data;
 
@@ -77,7 +77,7 @@ namespace claws
               return &data;
             }
           };
-          return SelfPointerLike{func(*it)};
+          return self_pointer_like{func(*it)};
         }
 
 #define CONTAINER_VIEW_ITERATOR_BINARY_PREDICATE(OP)                                                                                                           \
@@ -109,23 +109,23 @@ namespace claws
       }
     };
 
-    return ContainerView{begin, end, func};
+    return container_view{begin, end, func};
   }
 
   template<class T>
-  struct SameValIterator
+  struct same_val_iterator
   {
     T *t;
 
-    SameValIterator(T &t)
+    same_val_iterator(T &t)
       : t(&t)
     {}
 
-    SameValIterator() = default;
-    SameValIterator(SameValIterator const &) = default;
-    SameValIterator(SameValIterator &&) = default;
-    SameValIterator &operator=(SameValIterator const &) = default;
-    SameValIterator &operator=(SameValIterator &&) = default;
+    same_val_iterator() = default;
+    same_val_iterator(same_val_iterator const &) = default;
+    same_val_iterator(same_val_iterator &&) = default;
+    same_val_iterator &operator=(same_val_iterator const &) = default;
+    same_val_iterator &operator=(same_val_iterator &&) = default;
 
     auto &operator*() const
     {

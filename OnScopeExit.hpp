@@ -5,31 +5,31 @@
 namespace claws
 {
   template<class Func>
-  auto onScopeExit(Func func)
+  auto on_scope_exit(Func func)
   {
-    struct Ret
+    struct ret
     {
       std::optional<Func> func;
 
-      Ret(Func func)
+      ret(Func func)
         : func(std::make_optional(func))
       {}
 
-      Ret(Ret const &ret) = delete;
+      ret(ret const &ret) = delete;
 
-      Ret(Ret &&ret)
+      ret(ret &&ret)
         : func(ret.func)
       {
         ret.func.reset();
       };
 
-      ~Ret()
+      ~ret()
       {
         if (func)
           (*func)();
       }
     };
 
-    return Ret{func};
+    return ret{func};
   }
 };

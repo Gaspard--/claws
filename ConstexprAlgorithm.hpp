@@ -2,8 +2,8 @@
 
 namespace claws
 {
-  template<class InputIt, class OutputIt>
-  constexpr OutputIt copy(InputIt begin, InputIt end, OutputIt out)
+  template<class input_it, class output_it>
+  constexpr output_it copy(input_it begin, input_it end, output_it out)
   {
     while (begin != end)
       {

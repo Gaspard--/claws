@@ -3,18 +3,10 @@
 namespace claws
 {
   template<class Data, class Container, class Context>
-  struct ContextfulContainer
+  struct contextful_container
   {
     Context context;
     Container container;
-
-    // public:
-    //   template<class ...U>
-    //   ContextfulContainer(Context context, U &&... u)
-    //     : context(context)
-    //     , container(std::forward<U>(u)...)
-    //   {
-    //   }
 
     auto operator[](std::size_t i)
     {

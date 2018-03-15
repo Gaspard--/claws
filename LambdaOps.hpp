@@ -2,50 +2,50 @@
 
 namespace claws
 {
-  namespace lambdaOps
+  namespace lambda_ops
   {
-    template<class Op1, class Op2>
-    struct Overload : private Op1, private Op2
+    template<class op1, class op2>
+    struct overload : private op1, private op2
     {
-      constexpr Overload(Op1 lh, Op2 rh)
-        : Op1(lh)
-        , Op2(rh)
+      constexpr overload(op1 lh, op2 rh)
+        : op1(lh)
+        , op2(rh)
       {}
-      using Op1::operator();
-      using Op2::operator();
+      using op1::operator();
+      using op2::operator();
     };
 
-    template<class Op1, class Op2>
-    constexpr auto operator+(Op1 lh, Op2 rh)
+    template<class op1, class op2>
+    constexpr auto operator+(op1 lh, op2 rh)
     {
-      return Overload<Op1, Op2>{lh, rh};
+      return overload<op1, op2>{lh, rh};
     }
 
-    template<class Op1, class Op2>
-    struct Composition : private Op1, private Op2
+    template<class op1, class op2>
+    struct composition : private op1, private op2
     {
-      constexpr Composition(Op1 lh, Op2 rh)
-        : Op1(lh)
-        , Op2(rh)
+      constexpr composition(op1 lh, op2 rh)
+        : op1(lh)
+        , op2(rh)
       {}
 
-      template<class... Params>
-      constexpr auto operator()(Params &&... params)
+      template<class... param_types>
+      constexpr auto operator()(param_types &&... params)
       {
-        return Op1::operator()(Op2::operator()(std::forward<Params>(params)...));
+        return op1::operator()(op2::operator()(std::forward<param_types>(params)...));
       }
 
-      template<class... Params>
-      constexpr auto operator()(Params &&... params) const
+      template<class... param_types>
+      constexpr auto operator()(param_types &&... params) const
       {
-        return Op1::operator()(Op2::operator()(std::forward<Params>(params)...));
+        return op1::operator()(op2::operator()(std::forward<param_types>(params)...));
       }
     };
 
-    template<class Op1, class Op2>
-    constexpr auto operator*(Op1 lh, Op2 rh)
+    template<class op1, class op2>
+    constexpr auto operator*(op1 lh, op2 rh)
     {
-      return Composition<Op1, Op2>{lh, rh};
+      return composition<op1, op2>{lh, rh};
     }
   }
 };

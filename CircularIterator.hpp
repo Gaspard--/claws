@@ -2,25 +2,25 @@
 
 namespace claws
 {
-  template<class Iterator>
-  class CircularIterator
+  template<class iterator>
+  class circular_iterator
   {
-    Iterator current;
-    Iterator begin;
-    Iterator end;
+    iterator current;
+    iterator begin;
+    iterator end;
 
   public:
-    constexpr CircularIterator<Iterator>(Iterator begin, Iterator end, Iterator pos)
+    constexpr circular_iterator<iterator>(iterator begin, iterator end, iterator pos)
       : current(pos)
       , begin(begin)
       , end(end)
     {}
 
-    constexpr CircularIterator<Iterator>(Iterator begin, Iterator end)
-      : CircularIterator<Iterator>(begin, end, begin)
+    constexpr circular_iterator<iterator>(iterator begin, iterator end)
+      : circular_iterator<iterator>(begin, end, begin)
     {}
 
-    constexpr CircularIterator<Iterator> operator++()
+    constexpr circular_iterator<iterator> operator++()
     {
       ++current;
       if (current == end)
@@ -48,27 +48,27 @@ namespace claws
       return current;
     }
 
-    template<class Other>
-    constexpr bool operator==(Other const &other) const
+    template<class other_type>
+    constexpr bool operator==(other_type const &other) const
     {
       return current == other;
     }
 
-    template<class Other>
-    constexpr bool operator!=(Other const &other) const
+    template<class other_type>
+    constexpr bool operator!=(other_type const &other) const
     {
       return current != other;
     }
 
-    constexpr operator Iterator() const noexcept
+    constexpr operator iterator() const noexcept
     {
       return current;
     }
   };
 
-  template<class Container>
-  constexpr auto getCircularIterator(Container &container)
+  template<class container_type>
+  constexpr auto get_circular_iterator(container_type &container)
   {
-    return CircularIterator<decltype(container.begin())>(container.begin(), container.end());
+    return circular_iterator<decltype(container.begin())>(container.begin(), container.end());
   }
 }

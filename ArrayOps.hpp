@@ -89,7 +89,7 @@ namespace claws
     return true;
   }
 
-  namespace arrayOps
+  namespace array_ops
   {
     ARRAY_OPERATOR_DEF(+);
     ARRAY_OPERATOR_DEF(-);
@@ -108,7 +108,7 @@ namespace claws
     ARRAY_UNARY_OP_DEF(~);
   }
 
-  namespace scalarArrayOps
+  namespace scalar_array_ops
   {
     SCALAR_ARRAY_OPERATOR_DEF(+);
     SCALAR_ARRAY_OPERATOR_DEF(-);

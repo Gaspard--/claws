@@ -4,23 +4,23 @@
 
 namespace claws
 {
-  template<template<class...> class DestTemplate, class Src>
-  class CopyParamPack
+  template<template<class...> class dest_template, class src>
+  class copy_param_pack
   {
-    template<class... T, template<class...> class SrcTemplate>
-    static DestTemplate<T...> convert(SrcTemplate<T...>);
+    template<class... T, template<class...> class src_template>
+    static dest_template<T...> convert(src_template<T...>);
 
   public:
-    ~CopyParamPack() = delete;
-    using Type = decltype(convert(std::declval<Src>()));
+    ~copy_param_pack() = delete;
+    using type = decltype(convert(std::declval<src>()));
   };
 
-  template<template<class...> class DestTemplate, class Src>
-  using CopyParamPack_T = typename CopyParamPack<DestTemplate, Src>::Type;
+  template<template<class...> class dest_template, class src>
+  using copy_param_pack_t = typename copy_param_pack<dest_template, src>::type;
 
-  template<class Src>
-  using ToTuple = CopyParamPack<std::tuple, Src>;
+  template<class src>
+  using to_tuple = copy_param_pack<std::tuple, src>;
 
-  template<class Src>
-  using ToTuple_T = typename ToTuple<Src>::Type;
+  template<class src>
+  using to_tuple_t = typename to_tuple<src>::type;
 }

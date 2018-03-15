@@ -2,21 +2,21 @@
 
 namespace claws
 {
-  template<class Value>
-  class SelfIterator
+  template<class value_type>
+  class self_iterator
   {
-    Value value;
+    value_type value;
 
   public:
-    constexpr SelfIterator<Value>(Value value) noexcept
+    constexpr self_iterator(value_type value) noexcept
       : value(std::move(value))
     {}
 
-    constexpr SelfIterator<Value>() noexcept = default;
-    constexpr SelfIterator<Value>(SelfIterator<Value> const &) noexcept = default;
-    constexpr SelfIterator<Value>(SelfIterator<Value> &&) noexcept = default;
-    constexpr SelfIterator<Value> &operator=(SelfIterator<Value> const &) noexcept = default;
-    constexpr SelfIterator<Value> &operator=(SelfIterator<Value> &&) noexcept = default;
+    constexpr self_iterator() noexcept = default;
+    constexpr self_iterator(self_iterator const &) noexcept = default;
+    constexpr self_iterator(self_iterator &&) noexcept = default;
+    constexpr self_iterator &operator=(self_iterator const &) noexcept = default;
+    constexpr self_iterator &operator=(self_iterator &&) noexcept = default;
 
 #define SELF_ITERATOR_UNARY_PREFIX(OP)                                                                                                                         \
   constexpr auto &operator OP() noexcept                                                                                                                       \
@@ -41,7 +41,7 @@ namespace claws
     SELF_ITERATOR_UNARY_SUFFIX(--);
 
 #define SELF_ITERATOR_BINARY_ASSIGN_OP(OP)                                                                                                                     \
-  constexpr auto &operator OP(Value val) noexcept                                                                                                              \
+  constexpr auto &operator OP(value_type val) noexcept                                                                                                         \
   {                                                                                                                                                            \
     value OP val;                                                                                                                                              \
     return *this;                                                                                                                                              \
@@ -51,16 +51,16 @@ namespace claws
     SELF_ITERATOR_BINARY_ASSIGN_OP(-=);
 
 #define SELF_ITERATOR_BINARY_OP(OP)                                                                                                                            \
-  constexpr auto operator OP(Value val) noexcept                                                                                                               \
+  constexpr auto operator OP(value_type val) noexcept                                                                                                          \
   {                                                                                                                                                            \
-    return SelfIterator<Value>(value OP val);                                                                                                                  \
+    return self_iterator(value OP val);                                                                                                                        \
   }
 
     SELF_ITERATOR_BINARY_OP(+);
     SELF_ITERATOR_BINARY_OP(-);
 
 #define SELF_ITERATOR_COMPARE_OP(OP)                                                                                                                           \
-  constexpr auto operator OP(SelfIterator<Value> const &other) noexcept                                                                                        \
+  constexpr auto operator OP(self_iterator const &other) noexcept                                                                                              \
   {                                                                                                                                                            \
     return value OP other.value;                                                                                                                               \
   }
@@ -72,7 +72,7 @@ namespace claws
     SELF_ITERATOR_COMPARE_OP(<);
     SELF_ITERATOR_COMPARE_OP(>);
 
-    constexpr auto operator-(SelfIterator<Value> const &other) const noexcept
+    constexpr auto operator-(self_iterator const &other) const noexcept
     {
       return value - other.value;
     }
@@ -82,32 +82,32 @@ namespace claws
       return value;
     }
 
-    constexpr auto operator[](Value index) const noexcept
+    constexpr auto operator[](value_type index) const noexcept
     {
       return value + index;
     }
   };
 
-  template<class Value>
-  class Range
+  template<class value_type>
+  class range
   {
-    SelfIterator<Value> pBegin;
-    SelfIterator<Value> pEnd;
+    self_iterator<value_type> p_begin;
+    self_iterator<value_type> p_end;
 
   public:
-    constexpr Range(Value begin, Value end) noexcept
-      : pBegin(begin)
-      , pEnd(end)
+    constexpr range(value_type begin, value_type end) noexcept
+      : p_begin(begin)
+      , p_end(end)
     {}
 
     constexpr auto const &begin() const noexcept
     {
-      return pBegin;
+      return p_begin;
     }
 
     constexpr auto const &end() const noexcept
     {
-      return pEnd;
+      return p_end;
     }
   };
 }
