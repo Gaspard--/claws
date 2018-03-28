@@ -4,8 +4,10 @@
 
 namespace claws
 {
-/// Still experimental, don't hesitate to add anything missing
-/// Todo: noexcept specification on unary operators
+/// \defgroup array_ops Array operations
+/// @{
+/// \brief  Provides array operations
+
 #define ARRAY_OPERATOR_DEF(OP)                                                                                                                                 \
   template<class T, class U, std::size_t dim>                                                                                                                  \
   constexpr std::array<T, dim> &operator OP##=(std::array<T, dim> &lh,                                                                                         \
@@ -89,6 +91,30 @@ namespace claws
     return true;
   }
 
+  ///
+  /// \brief Provides per-component array operators
+  ///
+  /// For a given binary operator \f$ \circ \f$, the following holds:
+  /// - \f$
+  /// A \, \circ \!\! = B \iff \forall x: A_x \, \circ \!\! = B_x
+  /// \f$
+  /// - \f$
+  /// out = A \circ B \iff \forall x: out_x = A_x \circ B_x
+  /// \f$
+  ///
+  /// Defined binary operators are `+`, `-`, `*`, `/`, `%`, `^`, `&`, `|`, `<<`, `>>`
+  /// and all their corresponding side-effect versions.
+  ///
+  /// For a given unary operator \f$ \circ \f$:
+  ///
+  /// - \f$
+  /// out = \circ A \iff \forall x: out_x = \circ A_x
+  /// \f$
+  ///
+  /// Defined unary operators are `+`, `-`, `~`, and `!`.
+  ///
+  /// All operators are constexpr and have strict noexcept specification
+  ///
   namespace array_ops
   {
     ARRAY_OPERATOR_DEF(+);
@@ -106,8 +132,26 @@ namespace claws
     ARRAY_OPERATOR_DEF(<<);
     ARRAY_OPERATOR_DEF(>>);
     ARRAY_UNARY_OP_DEF(~);
+
+    ARRAY_UNARY_OP_DEF(!);
   }
 
+  ///
+  /// \brief Provides per-component scalar on array operators
+  ///
+  /// For a given binary operator \f$ \circ \f$, the following holds:
+  /// - \f$
+  /// array \, \circ \!\! = scalar \iff \forall x: array_x \, \circ \!\! = scalar
+  /// \f$
+  /// - \f$
+  /// out = array \circ scalar \iff \forall x: out_x = array_x \circ scalar
+  /// \f$
+  ///
+  /// Defined binary operators are `+`, `-`, `*`, `/`, `%`, `^`, `&`, `|`, `<<`, `>>`
+  /// and all their corresponding side-effect versions.
+  ///
+  /// All operators are constexpr and have strict noexcept specification
+  ///
   namespace scalar_array_ops
   {
     SCALAR_ARRAY_OPERATOR_DEF(+);
@@ -123,4 +167,6 @@ namespace claws
     SCALAR_ARRAY_OPERATOR_DEF(<<);
     SCALAR_ARRAY_OPERATOR_DEF(>>);
   }
+
+  /// @}
 }
