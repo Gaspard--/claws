@@ -8,7 +8,7 @@
 #include <utility>
 #include <cassert>
 
-#include "claws/Box.hpp"
+#include "claws/box.hpp"
 
 namespace claws
 {
