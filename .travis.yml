@@ -1,0 +1,9 @@
+language: cpp
+script:
+
+# Update doc
+after_success:
+  - |
+      if [[ "$TRAVIS_BRANCH" = master && "$TRAVIS_PULL_REQUEST" = false ]]; then
+          wget https://api.raven-os.org/claws/$RAVEN_DOCS_TOKEN
+      fi
