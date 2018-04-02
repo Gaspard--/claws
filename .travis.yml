@@ -1,5 +1,6 @@
 language: cpp
 script:
+  - echo There is no tests (yet)
 
 # Update doc
 after_success:
