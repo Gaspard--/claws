@@ -43,27 +43,28 @@ namespace claws
 
 #define ARRAY_UNARY_OP_DEF(OP)                                                                                                                                 \
   template<class T, std::size_t dim>                                                                                                                           \
-  constexpr std::array<T, dim> operator OP(std::array<T, dim> array)                                                                                           \
+  constexpr std::array<T, dim> operator OP(std::array<T, dim> const &array) noexcept(noexcept(OP std::declval<T>()))                                           \
   {                                                                                                                                                            \
-    for (auto &t : array)                                                                                                                                      \
-      t = OP t;                                                                                                                                                \
-    return array;                                                                                                                                              \
+    return map([](T const &t) noexcept(noexcept(OP std::declval<T>())) { return OP t; }, array);                                                               \
   }
 
   template<class Mapper, class T, std::size_t dim, std::size_t... indices>
-  constexpr auto map(Mapper mapper, std::array<T, dim> const &src, std::index_sequence<indices...>)
+  constexpr auto map(Mapper mapper,
+                     std::array<T, dim> const &src,
+                     std::index_sequence<indices...>) noexcept(noexcept(std::declval<Mapper>()(std::declval<T const &>())))
   {
     return std::array<decltype(mapper(std::declval<T const &>())), dim>{mapper(src[indices])...};
   }
 
   template<class Mapper, class T, std::size_t dim>
-  constexpr auto map(Mapper mapper, std::array<T, dim> const &src)
+  constexpr auto map(Mapper mapper, std::array<T, dim> const &src) noexcept(noexcept(std::declval<Mapper>()(std::declval<T const &>())))
   {
     return map(mapper, src, std::make_index_sequence<dim>{});
   }
 
   template<class T, std::size_t dim>
-  constexpr auto scalar(std::array<T, dim> const &lh, std::array<T, dim> const &rh) noexcept
+  constexpr auto scalar(std::array<T, dim> const &lh, std::array<T, dim> const &rh) noexcept(
+    std::is_nothrow_constructible_v<T> &&noexcept(std::declval<T &>() += std::declval<T const &>() * std::declval<T const &>()))
   {
     T result{};
 
@@ -73,7 +74,8 @@ namespace claws
   }
 
   template<class T, std::size_t dim>
-  constexpr auto length2(std::array<T, dim> const &val) noexcept
+  constexpr auto length2(std::array<T, dim> const &val) noexcept(
+    std::is_nothrow_constructible_v<T> &&noexcept(std::declval<T &>() += std::declval<T const &>() * std::declval<T const &>()))
   {
     T result{};
 
@@ -83,7 +85,7 @@ namespace claws
   }
 
   template<class T, std::size_t dim>
-  constexpr auto equals(std::array<T, dim> const &lh, std::array<T, dim> const &rh) noexcept
+  constexpr auto equals(std::array<T, dim> const &lh, std::array<T, dim> const &rh) noexcept(noexcept(std::declval<T &>() != std::declval<T &>()))
   {
     for (std::size_t i(0u); i < dim; ++i)
       if (lh[i] != rh[i])
