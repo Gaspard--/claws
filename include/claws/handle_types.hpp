@@ -148,7 +148,7 @@ namespace claws
     ///
     /// \brief Default construction. Handle is empty.
     ///
-    constexpr handle<type, deleter_type>() noexcept(std::is_nothrow_constructible<type>() && std::is_nothrow_constructible<deleter_type>()) = default;
+    constexpr handle<type, deleter_type>() = default;
 
     ///
     /// @name Deleted copy contructors

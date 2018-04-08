@@ -12,11 +12,11 @@ namespace claws
       : value(std::move(value))
     {}
 
-    constexpr self_iterator() noexcept = default;
-    constexpr self_iterator(self_iterator const &) noexcept = default;
-    constexpr self_iterator(self_iterator &&) noexcept = default;
-    constexpr self_iterator &operator=(self_iterator const &) noexcept = default;
-    constexpr self_iterator &operator=(self_iterator &&) noexcept = default;
+    constexpr self_iterator() = default;
+    constexpr self_iterator(self_iterator const &) = default;
+    constexpr self_iterator(self_iterator &&) = default;
+    constexpr self_iterator &operator=(self_iterator const &) = default;
+    constexpr self_iterator &operator=(self_iterator &&) = default;
 
 #define SELF_ITERATOR_UNARY_PREFIX(OP)                                                                                                                         \
   constexpr auto &operator OP() noexcept                                                                                                                       \

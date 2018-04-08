@@ -142,12 +142,11 @@ namespace claws
       , _func(func)
     {}
 
-    constexpr container_view() noexcept(std::is_nothrow_default_constructible_v<it_type> &&std::is_nothrow_default_constructible_v<end_type>
-                                          &&std::is_nothrow_default_constructible_v<func_type>) = default;
-    container_view(container_view const &) noexcept(constructors_are_noexcept) = default;
-    container_view(container_view &&) noexcept(constructors_are_noexcept) = default;
-    container_view &operator=(container_view const &) noexcept(constructors_are_noexcept) = default;
-    container_view &operator=(container_view &&) noexcept(constructors_are_noexcept) = default;
+    constexpr container_view() = default;
+    container_view(container_view const &) = default;
+    container_view(container_view &&) = default;
+    container_view &operator=(container_view const &) = default;
+    container_view &operator=(container_view &&) = default;
     /// @}
 
     /// \name iterators to the view
@@ -184,11 +183,11 @@ namespace claws
       : t(t)
     {}
 
-    constexpr same_val_iterator() noexcept(std::is_nothrow_default_constructible<T>()) = default;
-    constexpr same_val_iterator(same_val_iterator const &) noexcept(std::is_nothrow_copy_constructible<T>()) = default;
-    constexpr same_val_iterator(same_val_iterator &&) noexcept(std::is_nothrow_move_constructible<T>()) = default;
-    constexpr same_val_iterator &operator=(same_val_iterator const &) noexcept(std::is_nothrow_copy_constructible<T>()) = default;
-    constexpr same_val_iterator &operator=(same_val_iterator &&) noexcept(std::is_nothrow_move_constructible<T>()) = default;
+    constexpr same_val_iterator() = default;
+    constexpr same_val_iterator(same_val_iterator const &) = default;
+    constexpr same_val_iterator(same_val_iterator &&) = default;
+    constexpr same_val_iterator &operator=(same_val_iterator const &) = default;
+    constexpr same_val_iterator &operator=(same_val_iterator &&) = default;
 
     constexpr auto &operator*() const noexcept
     {

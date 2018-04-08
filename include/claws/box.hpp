@@ -27,11 +27,11 @@ namespace claws
     /// @{
 
     /// Primitive is default initialised. (IE worth 0, or nullptr etc.)
-    constexpr box() noexcept = default;
-    constexpr box(box const &) noexcept = default;
-    constexpr box(box &&) noexcept = default;
-    constexpr box &operator=(box const &) noexcept = default;
-    constexpr box &operator=(box &&) noexcept = default;
+    constexpr box() = default;
+    constexpr box(box const &) = default;
+    constexpr box(box &&) = default;
+    constexpr box &operator=(box const &) = default;
+    constexpr box &operator=(box &&) = default;
 
     constexpr box(type &&value) noexcept
       : value{std::move(value)}
@@ -42,7 +42,7 @@ namespace claws
     {}
     /// @}
 
-    ~box() noexcept = default;
+    ~box() = default;
 
     /// \name User defined conversions
     /// All declared `noexcept` and `constexpr`.
