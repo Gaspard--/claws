@@ -136,7 +136,7 @@ namespace claws
     /// \brief contructs a container view
     ///
     /// This is the constructor that should fit most use cases.
-    /// Thanks to deduction guidelines, it's possible to right
+    /// Thanks to deduction guidelines, it's possible to write
     /// ```cpp
     /// for (auto value : container_view(begin, end, func))
     /// ```
@@ -148,6 +148,16 @@ namespace claws
       , _func(func)
     {}
 
+    ///
+    /// \brief contructs a container view
+    ///
+    /// This is the constructor that should fit most use cases.
+    /// Thanks to the added deduction guidelines, it's possible to write
+    /// ```cpp
+    /// for (auto value : container_view(container, func))
+    /// ```
+    /// which is really usefull. It may be necessary to qualify the auto properly depending on use-cases.
+    ///
     template<class container_type>
     constexpr container_view(container_type const &container, func_type const &func) noexcept(constructors_are_noexcept)
       : container_view(container.begin(), container.end(), func)
@@ -232,6 +242,8 @@ namespace claws
     }
   };
 
+
+  // Deduction guideline for second constructor
   template<class container_type, class func_type>
   container_view(container_type const &container, func_type const &func)
     -> container_view<decltype(container.begin()), decltype(container.begin()), func_type>;
