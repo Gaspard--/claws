@@ -77,6 +77,12 @@ namespace claws
       return func(*it);
     }
 
+    template<class index_type>
+    constexpr decltype(auto) operator[](index_type index) const noexcept(noexcept(func(*it)))
+    {
+      return func(*(it + index));
+    }
+
     /// \todo add noexcept specification
     constexpr decltype(auto) operator-> () const
     {
@@ -130,7 +136,7 @@ namespace claws
     /// \brief contructs a container view
     ///
     /// This is the constructor that should fit most use cases.
-    /// Thanks to deduction guidelines, it's possible to right
+    /// Thanks to deduction guidelines, it's possible to write
     /// ```cpp
     /// for (auto value : container_view(begin, end, func))
     /// ```
@@ -142,12 +148,33 @@ namespace claws
       , _func(func)
     {}
 
+    ///
+    /// \brief contructs a container view
+    ///
+    /// This is the constructor that should fit most use cases.
+    /// Thanks to the added deduction guidelines, it's possible to write
+    /// ```cpp
+    /// for (auto value : container_view(container, func))
+    /// ```
+    /// which is really usefull. It may be necessary to qualify the auto properly depending on use-cases.
+    ///
+    template<class container_type>
+    constexpr container_view(container_type const &container, func_type const &func) noexcept(constructors_are_noexcept)
+      : container_view(container.begin(), container.end(), func)
+    {}
+
     constexpr container_view() = default;
-    container_view(container_view const &) = default;
-    container_view(container_view &&) = default;
-    container_view &operator=(container_view const &) = default;
-    container_view &operator=(container_view &&) = default;
+    constexpr container_view(container_view const &) = default;
+    constexpr container_view(container_view &&) = default;
+    constexpr container_view &operator=(container_view const &) = default;
+    constexpr container_view &operator=(container_view &&) = default;
     /// @}
+
+    template<class index_type>
+    constexpr auto operator[](index_type index)
+    {
+      return begin()[index];
+    }
 
     /// \name iterators to the view
     ///
@@ -214,4 +241,10 @@ namespace claws
       return true;
     }
   };
+
+
+  // Deduction guideline for second constructor
+  template<class container_type, class func_type>
+  container_view(container_type const &container, func_type const &func)
+    -> container_view<decltype(container.begin()), decltype(container.begin()), func_type>;
 }
