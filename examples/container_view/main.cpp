@@ -18,7 +18,7 @@ int main()
       assert(call_count == i); // values are computed when queried
       assert(data[i] * 2 == data_times_two[i]); // the returned is the function applied to the `i`th element
     }
-  data_times_two[0]; // dummy access
+  data_times_two[0]; // dummy access to show `call_count` increase
   assert(call_count == data_times_two.size() + 1ul); // container doesn't store result
   /// [Example usage]
 }
