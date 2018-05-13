@@ -122,17 +122,27 @@ namespace claws
     it_type _begin;
     end_type _end;
 
-    auto begin() const noexcept(std::is_nothrow_copy_constructible_v<it_type>)
+    constexpr auto begin() const noexcept(std::is_nothrow_copy_constructible_v<it_type>)
     {
       return _begin;
     }
 
-    auto end() const noexcept(std::is_nothrow_copy_constructible_v<end_type>)
+    constexpr auto end() const noexcept(std::is_nothrow_copy_constructible_v<end_type>)
     {
       return _end;
     }
+
+    constexpr auto size() noexcept(noexcept(std::declval<iterator_pair>().end() - std::declval<iterator_pair>().begin()))
+    {
+      return end() - begin();
+    }
   };
 
+  ///
+  /// \brief a class providing an easy way to work with a mapped view of a container
+  ///
+  /// \snippetlineno main.cpp Example usage
+  ///
   template<class container_type, class func_type>
   class container_view
   {
@@ -172,7 +182,8 @@ namespace claws
     /// ```
     /// which is really useful. It may be necessary to qualify the auto properly depending on use-cases.
     ///
-    constexpr container_view(container_type const &container, func_type const &func)
+    template<class constructor_container_type>
+    constexpr container_view(constructor_container_type &container, func_type const &func)
       : container_view(container.begin(), container.end(), func)
     {}
 
@@ -200,9 +211,14 @@ namespace claws
     /// @}
 
     template<class index_type>
-    constexpr auto operator[](index_type index)
+    constexpr decltype(auto) operator[](index_type index)
     {
       return begin()[index];
+    }
+
+    constexpr auto size()
+    {
+      return container.size();
     }
 
     /// \name iterators to the view
@@ -274,7 +290,7 @@ namespace claws
 
   // Deduction guideline for second constructor
   template<class container_type, class func_type>
-  container_view(container_type const &container, func_type const &func)
+  container_view(container_type &container, func_type const &func)
     -> container_view<iterator_pair<decltype(container.begin()), decltype(container.begin())>, func_type>;
 
   template<class container_type, class func_type>
