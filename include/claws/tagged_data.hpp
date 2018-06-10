@@ -2,21 +2,22 @@
 
 namespace claws
 {
-  template<class _DataType, class _OffestType, class _Tag>
-  struct TaggedData
+  template<class _data_type, class _offset_type, class _tag>
+  struct tagged_data
   {
-    using Tag = _Tag;
-    using DataType = _DataType;
-    DataType data;
+    using tag = _tag;
+    using offset_type = _offset_type;
+    using data_type = _data_type;
+    data_type data;
 
-    constexpr TaggedData(TaggedData const &) noexcept = default;
+    constexpr tagged_data(tagged_data const &) noexcept = default;
 
-    explicit constexpr TaggedData(DataType data = 0u) noexcept
+    explicit constexpr tagged_data(data_type data = 0u) noexcept
       : data(data)
     {}
 
 #define CLAWS_TAGGED_DATA_PREFIX_OP(OP)				\
-    constexpr TaggedData &operator OP() noexcept		\
+    constexpr tagged_data &operator OP() noexcept		\
     {								\
       OP data;							\
       return *this;						\
@@ -26,7 +27,7 @@ namespace claws
     CLAWS_TAGGED_DATA_PREFIX_OP(--);
 
 #define CLAWS_TAGGED_DATA_SUFFIX_OP(OP)				\
-    constexpr TaggedData operator OP(int) noexcept		\
+    constexpr tagged_data operator OP(int) noexcept		\
     {								\
       auto copy(*this);						\
       OP *this;							\
@@ -37,7 +38,7 @@ namespace claws
     CLAWS_TAGGED_DATA_SUFFIX_OP(--);
     
 #define CLAWS_TAGGED_DATA_COMPARE(OP)					\
-    constexpr bool operator OP(TaggedData const &other) const noexcept	\
+    constexpr bool operator OP(tagged_data const &other) const noexcept	\
     {									\
       return data OP other.data;					\
     }
@@ -50,9 +51,9 @@ namespace claws
     CLAWS_TAGGED_DATA_COMPARE(>);
 
 #define CLAWS_TAGGED_DATA_BINARY_OP(OP)					\
-    constexpr auto operator OP(_OffestType const &other) const noexcept \
+    constexpr auto operator OP(_offset_type const &other) const noexcept \
     {									\
-      return TaggedData(static_cast<DataType>(data OP other));		\
+      return tagged_data(static_cast<data_type>(data OP other));		\
     }
 
     CLAWS_TAGGED_DATA_BINARY_OP(+);
