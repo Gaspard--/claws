@@ -132,7 +132,7 @@ namespace claws
       return _end;
     }
 
-    constexpr auto size() noexcept(noexcept(std::declval<iterator_pair>().end() - std::declval<iterator_pair>().begin()))
+    constexpr auto size() const noexcept(noexcept(std::declval<iterator_pair>().end() - std::declval<iterator_pair>().begin()))
     {
       return end() - begin();
     }
