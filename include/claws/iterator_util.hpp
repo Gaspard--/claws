@@ -10,7 +10,7 @@ namespace claws
 
   public:
     using difference_type = typename std::iterator_traits<raw_it_type>::difference_type;
-    using value_type = std::remove_cv_t<decltype(func(*it))>;
+    using value_type = std::remove_reference_t<decltype(func(*it))>;
     using pointer = value_type *;
     using reference = value_type &;
     using iterator_category = typename std::iterator_traits<raw_it_type>::iterator_category;
