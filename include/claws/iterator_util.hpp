@@ -10,9 +10,9 @@ namespace claws
 
   public:
     using difference_type = typename std::iterator_traits<raw_it_type>::difference_type;
-    using value_type = std::remove_reference_t<decltype(func(*it))>;
-    using pointer = value_type *;
-    using reference = value_type &;
+    using reference = decltype(func(*it));
+    using value_type = std::remove_cv_t<std::remove_reference_t<reference>>;
+    using pointer = std::remove_reference_t<reference> *;
     using iterator_category = typename std::iterator_traits<raw_it_type>::iterator_category;
 
     constexpr iterator_view(raw_it_type const &it,
@@ -72,13 +72,13 @@ namespace claws
       return it - other.it;
     };
 
-    constexpr decltype(auto) operator*() const noexcept(noexcept(func(*it)))
+    constexpr reference decltype(auto) operator*() const noexcept(noexcept(func(*it)))
     {
       return func(*it);
     }
 
     template<class index_type>
-    constexpr decltype(auto) operator[](index_type index) const noexcept(noexcept(func(*it)))
+    constexpr reference operator[](index_type index) const noexcept(noexcept(func(*it)))
     {
       return func(*(it + index));
     }
