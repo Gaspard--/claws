@@ -72,7 +72,7 @@ namespace claws
       return it - other.it;
     };
 
-    constexpr reference decltype(auto) operator*() const noexcept(noexcept(func(*it)))
+    constexpr reference operator*() const noexcept(noexcept(func(*it)))
     {
       return func(*it);
     }
