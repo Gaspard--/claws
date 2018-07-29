@@ -169,6 +169,24 @@ namespace claws
     SCALAR_ARRAY_OPERATOR_DEF(<<);
     SCALAR_ARRAY_OPERATOR_DEF(>>);
   }
-
   /// @}
+
+  namespace impl
+  {
+    template<size_t size, class Func, size_t... indices>
+    constexpr auto init_array(Func &&functor, std::index_sequence<indices...>)
+    {
+      return std::array{(static_cast<void>(indices), functor())...};
+    }
+  }
+
+  /// \brief returns an array of size `size` initialized by calls to `functor`
+  ///
+  /// \tparam size number of elements in the returned array
+  /// \param functor called to initialize each element in the returned array
+  template<size_t size, class Func>
+  constexpr auto init_array(Func &&functor) noexcept(noexcept(functor()))
+  {
+    return impl::init_array<size>(std::forward<Func>(functor), std::make_index_sequence<size>{});
+  }
 }
