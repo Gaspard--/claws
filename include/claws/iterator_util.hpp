@@ -15,6 +15,12 @@ namespace claws
     using pointer = std::remove_reference_t<reference> *;
     using iterator_category = typename std::iterator_traits<raw_it_type>::iterator_category;
 
+    iterator_view() = default;
+    iterator_view(iterator_view const &) = default;
+    iterator_view(iterator_view &&) = default;
+    iterator_view& operator=(iterator_view const &) = default;
+    iterator_view& operator=(iterator_view &&) = default;
+
     constexpr iterator_view(raw_it_type const &it,
                             func_type const &func) noexcept(std::is_nothrow_copy_constructible_v<raw_it_type> &&std::is_nothrow_copy_constructible_v<func_type>)
       : it(it)
