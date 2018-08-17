@@ -17,7 +17,7 @@ option(CLAWS_BUILD_EXAMPLES "Build claws examples" OFF)
 option(USE_PROJECT_IN_AN_IDE "Workaround for header-only libraries, put it to ON if you use CLION" ON)
 
 ##! CMake Path
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(library)
 
 ##! Project modules
