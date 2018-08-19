@@ -1,0 +1,7 @@
+include(buildtype)
+include(color)
+include(platform)
+include(compiler)
+include(unit_tests)
+include(directory)
+include(module)
