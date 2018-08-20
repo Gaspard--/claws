@@ -222,7 +222,13 @@ namespace claws
       return begin()[index];
     }
 
-    constexpr auto size()
+    template<class index_type>
+    constexpr decltype(auto) operator[](index_type index) const
+    {
+      return begin()[index];
+    }
+
+    constexpr auto size() const
     {
       return container.size();
     }
