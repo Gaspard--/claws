@@ -14,7 +14,7 @@ enable_testing()
 ##! Project options
 option(CLAWS_BUILD_TESTS "Build claws tests" ON)
 option(CLAWS_BUILD_EXAMPLES "Build claws examples" OFF)
-option(USE_PROJECT_IN_AN_IDE "Workaround for header-only libraries, put it to ON if you use CLION" ON)
+option(IDE_BUILD "Workaround for header-only libraries, put it to ON if you use CLION" OFF)
 
 ##! CMake Path
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
@@ -39,3 +39,39 @@ add_library(claws INTERFACE)
 target_link_libraries(claws INTERFACE
         claws::utils
         )
+
+if (NOT IDE_BUILD)
+  include(GNUInstallDirs)
+  include(CMakePackageConfigHelpers)
+  install(TARGETS
+    claws
+    EXPORT claws-targets
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
+
+  install(DIRECTORY
+    ${CMAKE_CURRENT_SOURCE_DIR}/modules
+    DESTINATION
+    ${CMAKE_INSTALL_INCLUDEDIR}/claws
+    FILES_MATCHING PATTERN "*.h*"
+    )
+
+  install(EXPORT claws-targets
+    FILE claws-targets.cmake
+    NAMESPACE claws::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/claws
+    )
+
+  configure_package_config_file(
+    "${PROJECT_SOURCE_DIR}/cmake/claws-config.cmake.in"
+    "${PROJECT_BINARY_DIR}/claws-config.cmake"
+    INSTALL_DESTINATION lib/cmake/claws
+    )
+
+  install(FILES
+    "${PROJECT_BINARY_DIR}/claws-config.cmake"
+    DESTINATION lib/cmake/claws)
+endif()
