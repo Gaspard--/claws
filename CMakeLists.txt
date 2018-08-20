@@ -14,7 +14,7 @@ enable_testing()
 ##! Project options
 option(CLAWS_BUILD_TESTS "Build claws tests" ON)
 option(CLAWS_BUILD_EXAMPLES "Build claws examples" OFF)
-option(USE_PROJECT_IN_AN_IDE "Workaround for header-only libraries, put it to ON if you use CLION" OFF)
+option(IDE_BUILD "Workaround for header-only libraries, put it to ON if you use CLION" OFF)
 
 ##! CMake Path
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
@@ -40,7 +40,7 @@ target_link_libraries(claws INTERFACE
         claws::utils
         )
 
-if (NOT USE_PROJECT_IN_AN_IDE)
+if (NOT IDE_BUILD)
   include(GNUInstallDirs)
   include(CMakePackageConfigHelpers)
   install(TARGETS

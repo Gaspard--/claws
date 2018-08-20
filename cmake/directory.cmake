@@ -43,7 +43,7 @@ function(get_libraries OUTPUT TARGET)
 endfunction()
 
 macro(magic_source_group TARGET)
-    if (MSVC AND USE_PROJECT_IN_AN_IDE)
+    if (MSVC AND IDE_BUILD)
         get_libraries(__result__ ${TARGET})
         foreach (__current_lib__ ${__result__})
             group_target_sources(${__current_lib__})

@@ -7,7 +7,7 @@ macro(CREATE_MODULE ModuleAlias LibSources BuildInterfaceDirectory)
     string(REPLACE "::" ";" ListArg ${ModuleAlias})
     list(GET ListArg 1 RealModuleName)
     add_library(${RealModuleName} INTERFACE)
-    if (USE_PROJECT_IN_AN_IDE)
+    if (IDE_BUILD)
         target_sources(${RealModuleName} INTERFACE ${LibSources})
     endif ()
 
@@ -58,7 +58,7 @@ macro(CREATE_MODULE_PLUGIN ModuleAlias LibSources BuildInterfaceDirectory Output
 endmacro()
 
 macro(AUTO_TARGETS_MODULE_INSTALL MODULE_NAME)
-    if (NOT USE_PROJECT_IN_AN_IDE)
+    if (NOT IDE_BUILD)
         install(TARGETS
                 ${MODULE_NAME}
                 EXPORT ${PROJECT_NAME}-${MODULE_NAME}-targets
@@ -76,7 +76,7 @@ macro(AUTO_TARGETS_MODULE_INSTALL MODULE_NAME)
 endmacro()
 
 macro(AUTO_TARGETS_PLUGINS_INSTALL MODULE_NAME EXPORT_NAME)
-    if (NOT USE_PROJECT_IN_AN_IDE)
+    if (NOT IDE_BUILD)
         include(GNUInstallDirs)
 
         include(CMakePackageConfigHelpers)
