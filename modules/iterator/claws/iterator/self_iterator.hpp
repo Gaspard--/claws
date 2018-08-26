@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 namespace claws
 {
   template<class value_type>

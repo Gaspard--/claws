@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 namespace claws
 {
   /// \defgroup lambda_ops Lambda operations

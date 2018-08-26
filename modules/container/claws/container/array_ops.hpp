@@ -4,9 +4,9 @@
 
 namespace claws
 {
-/// \defgroup array_ops Array operations
-/// @{
-/// \brief  Provides array operations
+  /// \defgroup array_ops Array operations
+  /// @{
+  /// \brief  Provides array operations
 
 #define ARRAY_OPERATOR_DEF(OP)                                                                                                                                 \
   template<class T, class U, std::size_t dim>                                                                                                                  \

@@ -1,7 +1,3 @@
-///
-/// *Defined in "HandleTypes.hpp"*
-/// (TODO: rename to handle_types.hpp)*
-///
 #pragma once
 
 #include <type_traits>

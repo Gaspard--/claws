@@ -26,16 +26,16 @@ namespace claws
     {}
 
     template<class func, std::size_t... indices>
-    static auto apply_op(func &&func, std::index_sequence<indices...>)
+    static auto apply_op(func &&f, std::index_sequence<indices...>)
     {
-      return vect{func(indices)...};
+      return vect{f(indices)...};
     }
 
   public:
     template<class func>
-    static vect<dim, T> apply_op(func &&func)
+    static vect<dim, T> apply_op(func &&f)
     {
-      return apply_op(func, std::make_index_sequence<dim>{});
+      return apply_op(f, std::make_index_sequence<dim>{});
     }
 
     template<class V>
@@ -96,7 +96,7 @@ namespace claws
 
 #define VECT_OPERATOR_DEF(OP)                                                                                                                                  \
   template<class U>                                                                                                                                            \
-  constexpr vect<dim, T> &operator OP##=(Vect<dim, U> const &other)                                                                                            \
+  constexpr vect<dim, T> &operator OP##=(vect<dim, U> const &other)                                                                                            \
   {                                                                                                                                                            \
     for (std::size_t i(0u); i != dim; ++i)                                                                                                                     \
       data[i] OP## = other[i];                                                                                                                                 \
