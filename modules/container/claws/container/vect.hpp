@@ -94,39 +94,39 @@ namespace claws
       return (data[index]);
     }
 
-#define VECT_OPERATOR_DEF(OP)                                                                                                                                  \
-  template<class U>                                                                                                                                            \
-  constexpr vect<dim, T> &operator OP##=(vect<dim, U> const &other)                                                                                            \
-  {                                                                                                                                                            \
-    for (std::size_t i(0u); i != dim; ++i)                                                                                                                     \
-      data[i] OP## = other[i];                                                                                                                                 \
-    return (*this);                                                                                                                                            \
-  };                                                                                                                                                           \
-                                                                                                                                                               \
-  template<class U>                                                                                                                                            \
-  constexpr auto operator OP(vect<dim, U> const &other) const                                                                                                  \
-  {                                                                                                                                                            \
-    vect<dim, decltype(data[0] OP other[0])> result{*this};                                                                                                    \
-                                                                                                                                                               \
-    result OP## = other;                                                                                                                                       \
-    return result;                                                                                                                                             \
-  };                                                                                                                                                           \
-                                                                                                                                                               \
-  template<class U>                                                                                                                                            \
-  constexpr vect<dim, T> &operator OP##=(U const &other)                                                                                                       \
-  {                                                                                                                                                            \
-    for (auto &elem : *this)                                                                                                                                   \
-      elem OP## = other;                                                                                                                                       \
-    return (*this);                                                                                                                                            \
-  };                                                                                                                                                           \
-                                                                                                                                                               \
-  template<class U>                                                                                                                                            \
-  constexpr auto operator OP(U const &other) const                                                                                                             \
-  {                                                                                                                                                            \
-    vect<dim, decltype(data[0] OP other)> result{*this};                                                                                                       \
-                                                                                                                                                               \
-    result OP## = other;                                                                                                                                       \
-    return result;                                                                                                                                             \
+#define VECT_OPERATOR_DEF(OP)                                       \
+  template<class U>                                                 \
+  constexpr vect<dim, T> &operator OP##=(vect<dim, U> const &other) \
+  {                                                                 \
+    for (std::size_t i(0u); i != dim; ++i)                          \
+      data[i] OP## = other[i];                                      \
+    return (*this);                                                 \
+  };                                                                \
+                                                                    \
+  template<class U>                                                 \
+  constexpr auto operator OP(vect<dim, U> const &other) const       \
+  {                                                                 \
+    vect<dim, decltype(data[0] OP other[0])> result{*this};         \
+                                                                    \
+    result OP## = other;                                            \
+    return result;                                                  \
+  };                                                                \
+                                                                    \
+  template<class U>                                                 \
+  constexpr vect<dim, T> &operator OP##=(U const &other)            \
+  {                                                                 \
+    for (auto &elem : *this)                                        \
+      elem OP## = other;                                            \
+    return (*this);                                                 \
+  };                                                                \
+                                                                    \
+  template<class U>                                                 \
+  constexpr auto operator OP(U const &other) const                  \
+  {                                                                 \
+    vect<dim, decltype(data[0] OP other)> result{*this};            \
+                                                                    \
+    result OP## = other;                                            \
+    return result;                                                  \
   }
 
     VECT_OPERATOR_DEF(+);
@@ -162,17 +162,17 @@ namespace claws
       return (map_impl(func, std::make_index_sequence<dim>{}));
     }
 
-#define VECT_UNARY_OP_DEF(OP)                                                                                                                                  \
-  constexpr vect<dim, T> operator OP(void) const                                                                                                               \
-  {                                                                                                                                                            \
-    struct mapper                                                                                                                                              \
-    {                                                                                                                                                          \
-      T operator()(T const &t)                                                                                                                                 \
-      {                                                                                                                                                        \
-        return OP t;                                                                                                                                           \
-      }                                                                                                                                                        \
-    };                                                                                                                                                         \
-    return map(mapper{});                                                                                                                                      \
+#define VECT_UNARY_OP_DEF(OP)                    \
+  constexpr vect<dim, T> operator OP(void) const \
+  {                                              \
+    struct mapper                                \
+    {                                            \
+      T operator()(T const &t)                   \
+      {                                          \
+        return OP t;                             \
+      }                                          \
+    };                                           \
+    return map(mapper{});                        \
   }
 
     VECT_UNARY_OP_DEF(-);
@@ -205,17 +205,17 @@ namespace claws
       return length2() > 0 ? ((*this) / sqrt(length2())) : *this;
     }
 
-#define VECT_NAMED_COMPONENT(NAME, INDEX)                                                                                                                      \
-  template<unsigned int _dim = dim, typename std::enable_if<(_dim > 0)>::type * = nullptr>                                                                     \
-  T NAME() const                                                                                                                                               \
-  {                                                                                                                                                            \
-    return (data[INDEX]);                                                                                                                                      \
-  }                                                                                                                                                            \
-                                                                                                                                                               \
-  template<unsigned int _dim = dim, typename std::enable_if<(_dim > 0)>::type * = nullptr>                                                                     \
-  T &NAME()                                                                                                                                                    \
-  {                                                                                                                                                            \
-    return (data[INDEX]);                                                                                                                                      \
+#define VECT_NAMED_COMPONENT(NAME, INDEX)                                                  \
+  template<unsigned int _dim = dim, typename std::enable_if<(_dim > 0)>::type * = nullptr> \
+  T NAME() const                                                                           \
+  {                                                                                        \
+    return (data[INDEX]);                                                                  \
+  }                                                                                        \
+                                                                                           \
+  template<unsigned int _dim = dim, typename std::enable_if<(_dim > 0)>::type * = nullptr> \
+  T &NAME()                                                                                \
+  {                                                                                        \
+    return (data[INDEX]);                                                                  \
   }
 
     VECT_NAMED_COMPONENT(x, 0);

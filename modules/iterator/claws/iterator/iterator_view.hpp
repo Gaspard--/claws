@@ -63,21 +63,21 @@ namespace claws
       return tmp;
     }
 
-#define CONTAINER_VIEW_ITERATOR_OP(OP)                                                                                                                         \
-  constexpr iterator_view &operator OP##=(difference_type val) noexcept(noexcept(it OP## = std::declval<difference_type>()))                                   \
-  {                                                                                                                                                            \
-    it OP## = val;                                                                                                                                             \
-    return *this;                                                                                                                                              \
-  };                                                                                                                                                           \
-                                                                                                                                                               \
-  constexpr iterator_view operator OP(difference_type val)                                                                                                     \
-    const noexcept(noexcept(std::declval<iterator_view<raw_it_type, func_type>>() OP## = std::declval<difference_type>())                                      \
-                   && std::is_nothrow_copy_constructible_v<iterator_view<raw_it_type, func_type>>)                                                             \
-  {                                                                                                                                                            \
-    auto tmp(*this);                                                                                                                                           \
-                                                                                                                                                               \
-    tmp OP## = val;                                                                                                                                            \
-    return tmp;                                                                                                                                                \
+#define CONTAINER_VIEW_ITERATOR_OP(OP)                                                                                       \
+  constexpr iterator_view &operator OP##=(difference_type val) noexcept(noexcept(it OP## = std::declval<difference_type>())) \
+  {                                                                                                                          \
+    it OP## = val;                                                                                                           \
+    return *this;                                                                                                            \
+  };                                                                                                                         \
+                                                                                                                             \
+  constexpr iterator_view operator OP(difference_type val)                                                                   \
+    const noexcept(noexcept(std::declval<iterator_view<raw_it_type, func_type>>() OP## = std::declval<difference_type>())    \
+                   && std::is_nothrow_copy_constructible_v<iterator_view<raw_it_type, func_type>>)                           \
+  {                                                                                                                          \
+    auto tmp(*this);                                                                                                         \
+                                                                                                                             \
+    tmp OP## = val;                                                                                                          \
+    return tmp;                                                                                                              \
   };
 
     CONTAINER_VIEW_ITERATOR_OP(-);
@@ -115,10 +115,10 @@ namespace claws
       return self_pointer_like{func(*it)};
     }
 
-#define CONTAINER_VIEW_ITERATOR_BINARY_PREDICATE(OP)                                                                                                           \
-  constexpr bool operator OP(iterator_view other) const noexcept(noexcept(it OP std::declval<raw_it_type>()))                                                  \
-  {                                                                                                                                                            \
-    return it OP other.it;                                                                                                                                     \
+#define CONTAINER_VIEW_ITERATOR_BINARY_PREDICATE(OP)                                                          \
+  constexpr bool operator OP(iterator_view other) const noexcept(noexcept(it OP std::declval<raw_it_type>())) \
+  {                                                                                                           \
+    return it OP other.it;                                                                                    \
   }
 
     /// \name comparision operators
