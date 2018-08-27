@@ -1,7 +1,7 @@
 #pragma once
 
 #include <utility>
-#include <claws/iterator/iterator_pair.hpp>
+#include <claws/container/iterator_pair.hpp>
 
 namespace claws
 {

@@ -3,7 +3,6 @@ set(MODULE_PATH
 
 set(MODULE_PUBLIC_HEADERS
         "${MODULE_PATH}/circular_iterator.hpp"
-        "${MODULE_PATH}/iterator_pair.hpp"
         "${MODULE_PATH}/iterator_view.hpp"
         "${MODULE_PATH}/same_val_iterator.hpp"
         "${MODULE_PATH}/self_iterator.hpp"
