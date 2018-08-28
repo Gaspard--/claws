@@ -1,6 +1,7 @@
 #pragma once
 
 #include <type_traits>
+#include <utility>
 
 namespace claws
 {
@@ -21,18 +22,16 @@ namespace claws
     inject_self() = default;
     inject_self(inject_self const &) = default;
     inject_self(inject_self &) = default;
-    inject_self& operator=(inject_self const &) = default;
-    inject_self& operator=(inject_self &) = default;
+    inject_self &operator=(inject_self const &) = default;
+    inject_self &operator=(inject_self &) = default;
 
     inject_self(functor_type const &functor) noexcept(std::is_nothrow_copy_constructible_v<functor_type>)
       : functor(functor)
-    {
-    }
+    {}
 
     inject_self(functor_type &&functor) noexcept(std::is_nothrow_move_constructible_v<functor_type>)
       : functor(std::move(functor))
-    {
-    }
+    {}
 
     template<class... param_types>
     decltype(auto) operator()(param_types &&... params)

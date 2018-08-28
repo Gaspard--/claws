@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 namespace claws
 {
   template<class Data, class Container, class Context>

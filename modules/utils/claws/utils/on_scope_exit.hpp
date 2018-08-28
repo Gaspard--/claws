@@ -1,5 +1,6 @@
 #pragma once
 
+#include <utility>
 #include <optional>
 
 namespace claws

@@ -1,13 +1,11 @@
 ///
-/// *Defined in "HandleTypes.hpp"*
-/// (TODO: rename to handle_types.hpp)*
+/// *Defined in "handle_types.hpp"*
 ///
+
 #pragma once
 
 #include <type_traits>
 #include <utility>
-#include <cassert>
-
 #include <claws/utils/box.hpp>
 
 namespace claws

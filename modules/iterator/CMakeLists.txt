@@ -1,0 +1,4 @@
+include(CMakeSources.cmake)
+set(MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+CREATE_MODULE(claws::iterator "${MODULE_SOURCES}" ${MODULE_PATH})
+AUTO_TARGETS_MODULE_INSTALL(iterator)

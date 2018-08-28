@@ -1,5 +1,7 @@
 #pragma once
 
+#include <tuple>
+
 namespace claws
 {
   namespace tuple_helper
