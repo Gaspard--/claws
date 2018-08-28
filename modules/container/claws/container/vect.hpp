@@ -94,7 +94,7 @@ namespace claws
       return (data[index]);
     }
 
-#define VECT_OPERATOR_DEF(OP)                                       \
+#define CLAWS_VECT_OPERATOR_DEF(OP)                                 \
   template<class U>                                                 \
   constexpr vect<dim, T> &operator OP##=(vect<dim, U> const &other) \
   {                                                                 \
@@ -129,14 +129,16 @@ namespace claws
     return result;                                                  \
   }
 
-    VECT_OPERATOR_DEF(+);
-    VECT_OPERATOR_DEF(-);
-    VECT_OPERATOR_DEF(*);
-    VECT_OPERATOR_DEF(/);
-    VECT_OPERATOR_DEF(%);
-    VECT_OPERATOR_DEF (^);
-    VECT_OPERATOR_DEF(|);
-    VECT_OPERATOR_DEF(&);
+    CLAWS_VECT_OPERATOR_DEF(+);
+    CLAWS_VECT_OPERATOR_DEF(-);
+    CLAWS_VECT_OPERATOR_DEF(*);
+    CLAWS_VECT_OPERATOR_DEF(/);
+    CLAWS_VECT_OPERATOR_DEF(%);
+    CLAWS_VECT_OPERATOR_DEF(^);
+    CLAWS_VECT_OPERATOR_DEF(|);
+    CLAWS_VECT_OPERATOR_DEF(&);
+
+#undef CLAWS_VECT_OPERATOR_DEF
 
     // TODO optimize ?
     constexpr bool equals(vect<dim, T> const &other) const
@@ -162,7 +164,7 @@ namespace claws
       return (map_impl(func, std::make_index_sequence<dim>{}));
     }
 
-#define VECT_UNARY_OP_DEF(OP)                    \
+#define CLAWS_VECT_UNARY_OP_DEF(OP)              \
   constexpr vect<dim, T> operator OP(void) const \
   {                                              \
     struct mapper                                \
@@ -175,10 +177,12 @@ namespace claws
     return map(mapper{});                        \
   }
 
-    VECT_UNARY_OP_DEF(-);
-    VECT_UNARY_OP_DEF(+);
-    VECT_UNARY_OP_DEF(~);
-    VECT_UNARY_OP_DEF(!);
+    CLAWS_VECT_UNARY_OP_DEF(-);
+    CLAWS_VECT_UNARY_OP_DEF(+);
+    CLAWS_VECT_UNARY_OP_DEF(~);
+    CLAWS_VECT_UNARY_OP_DEF(!);
+
+#undef CLAWS_VECT_UNARY_OP_DEF
 
   public:
     constexpr T sum(void) const
@@ -205,7 +209,7 @@ namespace claws
       return length2() > 0 ? ((*this) / sqrt(length2())) : *this;
     }
 
-#define VECT_NAMED_COMPONENT(NAME, INDEX)                                                  \
+#define CLAWS_VECT_NAMED_COMPONENT(NAME, INDEX)                                            \
   template<unsigned int _dim = dim, typename std::enable_if<(_dim > 0)>::type * = nullptr> \
   T NAME() const                                                                           \
   {                                                                                        \
@@ -218,10 +222,12 @@ namespace claws
     return (data[INDEX]);                                                                  \
   }
 
-    VECT_NAMED_COMPONENT(x, 0);
-    VECT_NAMED_COMPONENT(y, 1);
-    VECT_NAMED_COMPONENT(z, 2);
-    VECT_NAMED_COMPONENT(w, 3);
+    CLAWS_VECT_NAMED_COMPONENT(x, 0);
+    CLAWS_VECT_NAMED_COMPONENT(y, 1);
+    CLAWS_VECT_NAMED_COMPONENT(z, 2);
+    CLAWS_VECT_NAMED_COMPONENT(w, 3);
+
+#undef CLAWS_VECT_NAMED_COMPONENT
 
     constexpr bool all() const
     {

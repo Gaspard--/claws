@@ -63,7 +63,7 @@ namespace claws
       return tmp;
     }
 
-#define CONTAINER_VIEW_ITERATOR_OP(OP)                                                                                       \
+#define CLAWS_ITERATOR_VIEW_RANDOM_ACCESS_ITERATOR_OP(OP)                                                                    \
   constexpr iterator_view &operator OP##=(difference_type val) noexcept(noexcept(it OP## = std::declval<difference_type>())) \
   {                                                                                                                          \
     it OP## = val;                                                                                                           \
@@ -80,9 +80,11 @@ namespace claws
     return tmp;                                                                                                              \
   };
 
-    CONTAINER_VIEW_ITERATOR_OP(-);
+    CLAWS_ITERATOR_VIEW_RANDOM_ACCESS_ITERATOR_OP(-);
 
-    CONTAINER_VIEW_ITERATOR_OP(+);
+    CLAWS_ITERATOR_VIEW_RANDOM_ACCESS_ITERATOR_OP(+);
+
+#undef CLAWS_ITERATOR_VIEW_RANDOM_ACCESS_ITERATOR_OP
 
     constexpr difference_type operator-(iterator_view const &other) const noexcept(noexcept(std::declval<raw_it_type>() - std::declval<difference_type>()))
     {
@@ -115,7 +117,7 @@ namespace claws
       return self_pointer_like{func(*it)};
     }
 
-#define CONTAINER_VIEW_ITERATOR_BINARY_PREDICATE(OP)                                                          \
+#define CLAWS_ITERATOR_VIEW_BINARY_PREDICATE(OP)                                                              \
   constexpr bool operator OP(iterator_view other) const noexcept(noexcept(it OP std::declval<raw_it_type>())) \
   {                                                                                                           \
     return it OP other.it;                                                                                    \
@@ -124,17 +126,19 @@ namespace claws
     /// \name comparision operators
     /// comparaisions are inherited from
     /// @{
-    CONTAINER_VIEW_ITERATOR_BINARY_PREDICATE(==);
+    CLAWS_ITERATOR_VIEW_BINARY_PREDICATE(==);
 
-    CONTAINER_VIEW_ITERATOR_BINARY_PREDICATE(!=);
+    CLAWS_ITERATOR_VIEW_BINARY_PREDICATE(!=);
 
-    CONTAINER_VIEW_ITERATOR_BINARY_PREDICATE(<=);
+    CLAWS_ITERATOR_VIEW_BINARY_PREDICATE(<=);
 
-    CONTAINER_VIEW_ITERATOR_BINARY_PREDICATE(>=);
+    CLAWS_ITERATOR_VIEW_BINARY_PREDICATE(>=);
 
-    CONTAINER_VIEW_ITERATOR_BINARY_PREDICATE(<);
+    CLAWS_ITERATOR_VIEW_BINARY_PREDICATE(<);
 
-    CONTAINER_VIEW_ITERATOR_BINARY_PREDICATE(>);
+    CLAWS_ITERATOR_VIEW_BINARY_PREDICATE(>);
     /// @}
+
+#undef CLAWS_ITERATOR_VIEW_BINARY_PREDICATE
   };
 }
