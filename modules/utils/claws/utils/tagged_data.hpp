@@ -48,6 +48,8 @@ namespace claws
     CLAWS_TAGGED_DATA_PREFIX_OP(++);
     CLAWS_TAGGED_DATA_PREFIX_OP(--);
 
+#undef CLAWS_TAGGED_DATA_PREFIX_OP
+
 #define CLAWS_TAGGED_DATA_SUFFIX_OP(OP)           \
   constexpr tagged_data operator OP(int) noexcept \
   {                                               \
@@ -58,6 +60,8 @@ namespace claws
 
     CLAWS_TAGGED_DATA_SUFFIX_OP(++);
     CLAWS_TAGGED_DATA_SUFFIX_OP(--);
+
+#undef CLAWS_TAGGED_DATA_SUFFIX_OP
 
 #define CLAWS_TAGGED_DATA_COMPARE(OP)                                 \
   constexpr bool operator OP(tagged_data const &other) const noexcept \
@@ -72,6 +76,8 @@ namespace claws
     CLAWS_TAGGED_DATA_COMPARE(<);
     CLAWS_TAGGED_DATA_COMPARE(>);
 
+#undef CLAWS_TAGGED_DATA_COMPARE
+
 #define CLAWS_TAGGED_DATA_BINARY_OP(OP)                                \
   constexpr auto operator OP(_offset_type const &other) const noexcept \
   {                                                                    \
@@ -80,5 +86,7 @@ namespace claws
 
     CLAWS_TAGGED_DATA_BINARY_OP(+);
     CLAWS_TAGGED_DATA_BINARY_OP(-);
+
+#undef CLAWS_TAGGED_DATA_BINARY_OP
   };
 }

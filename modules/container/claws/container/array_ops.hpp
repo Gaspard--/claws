@@ -8,7 +8,7 @@ namespace claws
   /// @{
   /// \brief  Provides array operations
 
-#define ARRAY_OPERATOR_DEF(OP)                                                                                                                        \
+#define CLAWS_ARRAY_OPERATOR_DEF(OP)                                                                                                                  \
   template<class T, class U, std::size_t dim>                                                                                                         \
   constexpr std::array<T, dim> &operator OP##=(std::array<T, dim> &lh,                                                                                \
                                                std::array<U, dim> const &rh) noexcept(noexcept(std::declval<T &>() OP## = std::declval<U const &>())) \
@@ -26,7 +26,7 @@ namespace claws
     return lh;                                                                                                                                        \
   };
 
-#define SCALAR_ARRAY_OPERATOR_DEF(OP)                                                                                                                        \
+#define CLAWS_SCALAR_ARRAY_OPERATOR_DEF(OP)                                                                                                                  \
   template<class T, class U, std::size_t dim>                                                                                                                \
   constexpr std::array<T, dim> &operator OP##=(std::array<T, dim> &lh, U const &rh) noexcept(noexcept(std::declval<T &>() OP## = std::declval<U const &>())) \
   {                                                                                                                                                          \
@@ -41,7 +41,7 @@ namespace claws
     return lh OP## = rh;                                                                                                                                     \
   };
 
-#define ARRAY_UNARY_OP_DEF(OP)                                                                                       \
+#define CLAWS_ARRAY_UNARY_OP_DEF(OP)                                                                                 \
   template<class T, std::size_t dim>                                                                                 \
   constexpr std::array<T, dim> operator OP(std::array<T, dim> const &array) noexcept(noexcept(OP std::declval<T>())) \
   {                                                                                                                  \
@@ -119,23 +119,26 @@ namespace claws
   ///
   namespace array_ops
   {
-    ARRAY_OPERATOR_DEF(+);
-    ARRAY_OPERATOR_DEF(-);
-    ARRAY_UNARY_OP_DEF(+);
-    ARRAY_UNARY_OP_DEF(-);
+    CLAWS_ARRAY_OPERATOR_DEF(+);
+    CLAWS_ARRAY_OPERATOR_DEF(-);
+    CLAWS_ARRAY_UNARY_OP_DEF(+);
+    CLAWS_ARRAY_UNARY_OP_DEF(-);
 
-    ARRAY_OPERATOR_DEF(*);
-    ARRAY_OPERATOR_DEF(/);
-    ARRAY_OPERATOR_DEF(%);
+    CLAWS_ARRAY_OPERATOR_DEF(*);
+    CLAWS_ARRAY_OPERATOR_DEF(/);
+    CLAWS_ARRAY_OPERATOR_DEF(%);
 
-    ARRAY_OPERATOR_DEF (^);
-    ARRAY_OPERATOR_DEF(&);
-    ARRAY_OPERATOR_DEF(|);
-    ARRAY_OPERATOR_DEF(<<);
-    ARRAY_OPERATOR_DEF(>>);
-    ARRAY_UNARY_OP_DEF(~);
+    CLAWS_ARRAY_OPERATOR_DEF(^);
+    CLAWS_ARRAY_OPERATOR_DEF(&);
+    CLAWS_ARRAY_OPERATOR_DEF(|);
+    CLAWS_ARRAY_OPERATOR_DEF(<<);
+    CLAWS_ARRAY_OPERATOR_DEF(>>);
+    CLAWS_ARRAY_UNARY_OP_DEF(~);
 
-    ARRAY_UNARY_OP_DEF(!);
+    CLAWS_ARRAY_UNARY_OP_DEF(!);
+
+#undef CLAWS_ARRAY_OPERATOR_DEF
+#undef CLAWS_ARRAY_UNARY_OP_DEF
   }
 
   ///
@@ -156,18 +159,20 @@ namespace claws
   ///
   namespace scalar_array_ops
   {
-    SCALAR_ARRAY_OPERATOR_DEF(+);
-    SCALAR_ARRAY_OPERATOR_DEF(-);
+    CLAWS_SCALAR_ARRAY_OPERATOR_DEF(+);
+    CLAWS_SCALAR_ARRAY_OPERATOR_DEF(-);
 
-    SCALAR_ARRAY_OPERATOR_DEF(*);
-    SCALAR_ARRAY_OPERATOR_DEF(/);
-    SCALAR_ARRAY_OPERATOR_DEF(%);
+    CLAWS_SCALAR_ARRAY_OPERATOR_DEF(*);
+    CLAWS_SCALAR_ARRAY_OPERATOR_DEF(/);
+    CLAWS_SCALAR_ARRAY_OPERATOR_DEF(%);
 
-    SCALAR_ARRAY_OPERATOR_DEF (^);
-    SCALAR_ARRAY_OPERATOR_DEF(&);
-    SCALAR_ARRAY_OPERATOR_DEF(|);
-    SCALAR_ARRAY_OPERATOR_DEF(<<);
-    SCALAR_ARRAY_OPERATOR_DEF(>>);
+    CLAWS_SCALAR_ARRAY_OPERATOR_DEF(^);
+    CLAWS_SCALAR_ARRAY_OPERATOR_DEF(&);
+    CLAWS_SCALAR_ARRAY_OPERATOR_DEF(|);
+    CLAWS_SCALAR_ARRAY_OPERATOR_DEF(<<);
+    CLAWS_SCALAR_ARRAY_OPERATOR_DEF(>>);
+
+#undef CLAWS_SCALAR_ARRAY_OPERATOR_DEF
   }
   /// @}
 

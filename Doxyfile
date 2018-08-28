@@ -2086,7 +2086,7 @@ PREDEFINED             =
 # definition found in the source code.
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
-EXPAND_AS_DEFINED      = ARRAY_OPERATOR_DEF SCALAR_ARRAY_OPERATOR_DEF ARRAY_UNARY_OP_DEF CONTAINER_VIEW_ITERATOR_BINARY_PREDICATE
+EXPAND_AS_DEFINED      = CLAWS_ARRAY_OPERATOR_DEF CLAWS_SCALAR_ARRAY_OPERATOR_DEF CLAWS_ARRAY_UNARY_OP_DEF CLAWS_ITERATOR_VIEW_BINARY_PREDICATE
 
 # If the SKIP_FUNCTION_MACROS tag is set to YES then doxygen's preprocessor will
 # remove all references to function-like macros that are alone on a line, have

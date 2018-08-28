@@ -20,59 +20,69 @@ namespace claws
     constexpr self_iterator &operator=(self_iterator const &) = default;
     constexpr self_iterator &operator=(self_iterator &&) = default;
 
-#define SELF_ITERATOR_UNARY_PREFIX(OP)   \
-  constexpr auto &operator OP() noexcept \
-  {                                      \
-    OP value;                            \
-    return *this;                        \
+#define CLAWS_SELF_ITERATOR_UNARY_PREFIX_OP(OP) \
+  constexpr auto &operator OP() noexcept        \
+  {                                             \
+    OP value;                                   \
+    return *this;                               \
   }
 
-    SELF_ITERATOR_UNARY_PREFIX(++);
-    SELF_ITERATOR_UNARY_PREFIX(--);
+    CLAWS_SELF_ITERATOR_UNARY_PREFIX_OP(++);
+    CLAWS_SELF_ITERATOR_UNARY_PREFIX_OP(--);
 
-#define SELF_ITERATOR_UNARY_SUFFIX(OP)     \
-  constexpr auto operator OP(int) noexcept \
-  {                                        \
-    auto copy{*this};                      \
-                                           \
-    OP value;                              \
-    return copy;                           \
+#undef CLAWS_SELF_ITERATOR_UNARY_PREFIX_OP
+
+#define CLAWS_SELF_ITERATOR_UNARY_SUFFIX_OP(OP) \
+  constexpr auto operator OP(int) noexcept      \
+  {                                             \
+    auto copy{*this};                           \
+                                                \
+    OP value;                                   \
+    return copy;                                \
   }
 
-    SELF_ITERATOR_UNARY_SUFFIX(++);
-    SELF_ITERATOR_UNARY_SUFFIX(--);
+    CLAWS_SELF_ITERATOR_UNARY_SUFFIX_OP(++);
+    CLAWS_SELF_ITERATOR_UNARY_SUFFIX_OP(--);
 
-#define SELF_ITERATOR_BINARY_ASSIGN_OP(OP)             \
+#undef CLAWS_SELF_ITERATOR_UNARY_SUFFIX_OP
+
+#define CLAWS_SELF_ITERATOR_BINARY_ASSIGN_OP(OP)       \
   constexpr auto &operator OP(value_type val) noexcept \
   {                                                    \
     value OP val;                                      \
     return *this;                                      \
   }
 
-    SELF_ITERATOR_BINARY_ASSIGN_OP(+=);
-    SELF_ITERATOR_BINARY_ASSIGN_OP(-=);
+    CLAWS_SELF_ITERATOR_BINARY_ASSIGN_OP(+=);
+    CLAWS_SELF_ITERATOR_BINARY_ASSIGN_OP(-=);
 
-#define SELF_ITERATOR_BINARY_OP(OP)                   \
+#undef CLAWS_SELF_ITERATOR_BINARY_ASSIGN_OP
+
+#define CLAWS_SELF_ITERATOR_BINARY_OP(OP)             \
   constexpr auto operator OP(value_type val) noexcept \
   {                                                   \
     return self_iterator(value OP val);               \
   }
 
-    SELF_ITERATOR_BINARY_OP(+);
-    SELF_ITERATOR_BINARY_OP(-);
+    CLAWS_SELF_ITERATOR_BINARY_OP(+);
+    CLAWS_SELF_ITERATOR_BINARY_OP(-);
 
-#define SELF_ITERATOR_COMPARE_OP(OP)                              \
+#undef CLAWS_SELF_ITERATOR_BINARY_OP
+
+#define CLAWS_SELF_ITERATOR_COMPARE_OP(OP)                        \
   constexpr auto operator OP(self_iterator const &other) noexcept \
   {                                                               \
     return value OP other.value;                                  \
   }
 
-    SELF_ITERATOR_COMPARE_OP(==);
-    SELF_ITERATOR_COMPARE_OP(!=);
-    SELF_ITERATOR_COMPARE_OP(<=);
-    SELF_ITERATOR_COMPARE_OP(>=);
-    SELF_ITERATOR_COMPARE_OP(<);
-    SELF_ITERATOR_COMPARE_OP(>);
+    CLAWS_SELF_ITERATOR_COMPARE_OP(==);
+    CLAWS_SELF_ITERATOR_COMPARE_OP(!=);
+    CLAWS_SELF_ITERATOR_COMPARE_OP(<=);
+    CLAWS_SELF_ITERATOR_COMPARE_OP(>=);
+    CLAWS_SELF_ITERATOR_COMPARE_OP(<);
+    CLAWS_SELF_ITERATOR_COMPARE_OP(>);
+
+#undef CLAWS_SELF_ITERATOR_COMPARE_OP
 
     constexpr auto operator-(self_iterator const &other) const noexcept
     {
