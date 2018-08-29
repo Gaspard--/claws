@@ -8,7 +8,7 @@ namespace claws
   ///
   /// \brief Makes a primitive look like a class.
   ///
-  /// \tparam _type the primitive type. Specifically asserted to be primtive.
+  /// \tparam _type the primitive type. Specifically asserted to be primitive.
   ///
   /// `claws::box` is fully `constexpr` and `noexcept`
   ///
@@ -22,7 +22,7 @@ namespace claws
     static_assert(!std::is_class_v<type>, "box should store a primitive, not a class");
 
   private:
-    type value{};
+    type _value{};
 
   public:
     /// \name Contructors and assignement operators for box.
@@ -37,11 +37,11 @@ namespace claws
     constexpr box &operator=(box &&) = default;
 
     constexpr box(type &&value) noexcept
-      : value{std::move(value)}
+      : _value{std::move(value)}
     {}
 
     constexpr box(type const &value) noexcept
-      : value{value}
+      : _value{value}
     {}
     /// @}
 
@@ -51,14 +51,14 @@ namespace claws
     /// All declared `noexcept` and `constexpr`.
     /// Casting `claws::box<type>` to `type` is possible.
     /// @{
-    constexpr operator type const &() const &noexcept
+    constexpr operator type const &() const & noexcept
     {
-      return value;
+      return _value;
     }
 
     constexpr operator type &() & noexcept
     {
-      return value;
+      return _value;
     }
     /// @}
   };
