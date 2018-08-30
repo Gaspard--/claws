@@ -5,6 +5,13 @@
 
 namespace claws
 {
+  template<typename T>
+  inline constexpr bool is_boxable_v = not std::is_class_v<T>;
+
+  template<typename T>
+  struct is_boxable : std::bool_constant<is_boxable_v<T>>
+  {};
+
   ///
   /// \brief Makes a primitive look like a class.
   ///
@@ -19,7 +26,7 @@ namespace claws
     /// stored type
     using type = _type;
 
-    static_assert(!std::is_class_v<type>, "box should store a primitive, not a class");
+    static_assert(is_boxable_v<type>, "box should store a primitive, not a class");
 
   private:
     type _value{};
