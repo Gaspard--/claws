@@ -7,6 +7,10 @@ TEST(box, type_traits)
   using int_box = claws::box<int>;
   static_assert(std::is_class_v<int_box>);
   static_assert(std::is_same_v<typename int_box::type, int>);
+  static_assert(claws::is_boxable_v<int>);
+  static_assert(not claws::is_boxable_v<int_box>);
+  static_assert(claws::is_boxable<int>::value);
+  static_assert(not claws::is_boxable<int_box>::value);
 }
 
 TEST(box, constexpr_correctness)
