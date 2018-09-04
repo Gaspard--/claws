@@ -37,8 +37,11 @@ endif ()
 add_library(claws INTERFACE)
 
 target_link_libraries(claws INTERFACE
-        claws::utils
-        )
+  claws::utils
+  claws::container
+  claws::algorithm
+  claws::iterator
+  )
 
 if (NOT IDE_BUILD)
   include(GNUInstallDirs)
@@ -68,10 +71,10 @@ if (NOT IDE_BUILD)
   configure_package_config_file(
     "${PROJECT_SOURCE_DIR}/cmake/claws-config.cmake.in"
     "${PROJECT_BINARY_DIR}/claws-config.cmake"
-    INSTALL_DESTINATION lib/cmake/claws
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/claws
     )
 
   install(FILES
     "${PROJECT_BINARY_DIR}/claws-config.cmake"
-    DESTINATION lib/cmake/claws)
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/claws)
 endif()
