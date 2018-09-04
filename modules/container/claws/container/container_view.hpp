@@ -2,6 +2,7 @@
 
 #include <utility>
 #include <claws/container/iterator_pair.hpp>
+#include <claws/iterator/iterator_view.hpp>
 
 namespace claws
 {
