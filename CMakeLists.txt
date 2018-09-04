@@ -37,8 +37,11 @@ endif ()
 add_library(claws INTERFACE)
 
 target_link_libraries(claws INTERFACE
-        claws::utils
-        )
+  claws::utils
+  claws::container
+  claws::iterator
+  claws::algorithm
+  )
 
 if (NOT IDE_BUILD)
   include(GNUInstallDirs)
