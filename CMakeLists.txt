@@ -39,8 +39,8 @@ add_library(claws INTERFACE)
 target_link_libraries(claws INTERFACE
   claws::utils
   claws::container
-  claws::algorithm
   claws::iterator
+  claws::algorithm
   )
 
 if (NOT IDE_BUILD)
