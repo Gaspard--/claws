@@ -1,5 +1,5 @@
 include(CMakeSources.cmake)
 set(MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 CREATE_MODULE(claws::container "${MODULE_SOURCES}" ${MODULE_PATH})
-target_link_libraries(container INTERFACE claws::iterator)
+target_link_libraries(container INTERFACE claws::iterator claws::algorithm)
 AUTO_TARGETS_MODULE_INSTALL(container)

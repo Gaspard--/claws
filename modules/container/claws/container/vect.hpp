@@ -4,32 +4,32 @@
 #include <cstddef>
 #include <type_traits>
 #include <utility>
-#include <algorithm>
+#include <claws/algorithm/constexpr_algorithm.hpp>
 
 namespace claws
 {
   template<typename T, std::size_t Size>
   class vect;
 
-  namespace details
+  namespace impl
   {
     template<typename T, size_t Size, typename Transformer, size_t... indexes>
-    constexpr inline auto vect_transform_impl(const vect<T, Size> &from, Transformer &&transf, std::index_sequence<indexes...>)
+    constexpr inline auto vect_transform_impl(vect<T, Size> const &from, Transformer &&transf, std::index_sequence<indexes...>)
     {
       return vect{transf(from[indexes])...};
     };
   }
 
   template<typename T, size_t Size, typename Transformer>
-  constexpr inline auto vect_transform(const vect<T, Size> &from, Transformer &&transf) noexcept
+  constexpr inline auto vect_transform(vect<T, Size> const &from, Transformer &&transf) noexcept
   {
-    return details::vect_transform_impl(from, std::forward<Transformer>(transf), std::make_index_sequence<Size>{});
+    return impl::vect_transform_impl(from, std::forward<Transformer>(transf), std::make_index_sequence<Size>{});
   }
 
   template<typename To, typename T, size_t Size>
-  constexpr inline vect<To, Size> vect_cast(const vect<T, Size> &from) noexcept
+  constexpr inline vect<To, Size> vect_cast(vect<T, Size> const &from) noexcept
   {
-    return vect_transform(from, [](const auto &value) { return static_cast<To>(value); });
+    return vect_transform(from, [](auto const &value) constexpr { return static_cast<To>(value); });
   }
 
   template<typename T, std::size_t Size>
@@ -38,9 +38,9 @@ namespace claws
   public:
     using value_type = T;
     using reference = T &;
-    using const_reference = const T &;
+    using const_reference = T const &;
     using pointer = T *;
-    using const_pointer = const T *;
+    using const_pointer = T const *;
 
     using iterator = pointer;
     using const_iterator = const_pointer;
@@ -54,7 +54,7 @@ namespace claws
     value_type array[Size];
 
     template<size_t... indexes>
-    constexpr vect(const value_type (&arr)[Size], std::index_sequence<indexes...>) noexcept
+    constexpr vect(value_type const (&arr)[Size], std::index_sequence<indexes...>) noexcept
       : array{arr[indexes]...}
     {}
 
@@ -68,7 +68,7 @@ namespace claws
       : array{}
     {}
 
-    constexpr vect(const value_type (&arr)[Size]) noexcept
+    constexpr vect(value_type const (&arr)[Size]) noexcept
       : vect(arr, std::make_index_sequence<Size>{})
     {}
 
@@ -78,7 +78,7 @@ namespace claws
     {}
 
     template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, value_type>>>
-    constexpr vect(const vect<U, Size> &other) noexcept(std::is_nothrow_copy_constructible_v<value_type>)
+    constexpr vect(vect<U, Size> const &other) noexcept(std::is_nothrow_copy_constructible_v<value_type>)
       : vect(other.begin(), std::make_index_sequence<Size>{})
     {}
 
@@ -88,16 +88,16 @@ namespace claws
     {}
 
     template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, value_type>>>
-    vect &operator=(const vect<U, Size> &other) noexcept(std::is_nothrow_copy_assignable_v<value_type>)
+    constexpr vect &operator=(vect<U, Size> const &other) noexcept(std::is_nothrow_copy_assignable_v<value_type>)
     {
-      std::copy(other.begin(), other.end(), begin());
+      claws::copy(other.begin(), other.end(), begin());
       return *this;
     }
 
     template<typename U, typename = std::enable_if_t<std::is_convertible_v<U, value_type>>>
-    vect &operator=(vect<U, Size> &&other) noexcept(std::is_nothrow_move_assignable_v<value_type>)
+    constexpr vect &operator=(vect<U, Size> &&other) noexcept(std::is_nothrow_move_assignable_v<value_type>)
     {
-      std::move(other.begin(), other.end(), begin());
+      claws::move(other.begin(), other.end(), begin());
       return *this;
     }
 
@@ -196,7 +196,7 @@ namespace claws
   }                                                                   \
                                                                       \
   template<typename U>                                                \
-  constexpr auto operator OP(const vect<U, Size> &other) const        \
+  constexpr auto operator OP(vect<U, Size> const &other) const        \
   {                                                                   \
     vect<decltype(array[0] OP other[0]), Size> result{*this};         \
                                                                       \
@@ -205,7 +205,7 @@ namespace claws
   }                                                                   \
                                                                       \
   template<typename U>                                                \
-  constexpr vect<T, Size> &operator OP##=(const U &other)             \
+  constexpr vect<T, Size> &operator OP##=(U const &other)             \
   {                                                                   \
     for (auto &elem : *this)                                          \
       elem OP## = other;                                              \
@@ -240,7 +240,7 @@ namespace claws
 #undef CLAWS_VECT_OPERATOR_DEF
 
     template<typename U>
-    constexpr bool operator==(const vect<U, Size> &other) const noexcept
+    constexpr bool operator==(vect<U, Size> const &other) const noexcept
     {
       size_t i = 0;
 
@@ -251,7 +251,7 @@ namespace claws
 
 #define CLAWS_VECT_ORDER_OPERATOR_DEF(OP)                               \
   template<typename U>                                                  \
-  constexpr bool operator OP(const vect<U, Size> &other) const noexcept \
+  constexpr bool operator OP(vect<U, Size> const &other) const noexcept \
   {                                                                     \
     auto it1 = begin();                                                 \
     auto it2 = other.begin();                                           \
@@ -279,7 +279,7 @@ namespace claws
 #define CLAWS_VECT_UNARY_OP_DEF(OP)                                       \
   constexpr vect<T, Size> operator OP() const                             \
   {                                                                       \
-    return vect_transform(*this, [](const auto &cur) { return OP cur; }); \
+    return vect_transform(*this, [](auto const &cur) { return OP cur; }); \
   }
 
     CLAWS_VECT_UNARY_OP_DEF(-);
@@ -319,12 +319,12 @@ namespace claws
     {
       value_type result{0u};
 
-      for (const auto &t : *this)
+      for (auto const &t : *this)
         result += t;
       return result;
     }
 
-    constexpr value_type scalar(const vect<T, Size> &other) const noexcept
+    constexpr value_type scalar(vect<T, Size> const &other) const noexcept
     {
       return (*this * other).sum();
     }

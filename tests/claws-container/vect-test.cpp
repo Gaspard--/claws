@@ -8,10 +8,10 @@ TEST(vect, member_types)
 
   static_assert(std::is_same_v<typename vec::value_type, int>);
   static_assert(std::is_same_v<typename vec::reference, int &>);
-  static_assert(std::is_same_v<typename vec::const_reference, const int &>);
+  static_assert(std::is_same_v<typename vec::const_reference, int const &>);
   static_assert(std::is_same_v<typename vec::pointer, int *>);
-  static_assert(std::is_same_v<typename vec::const_pointer, const int *>);
-  static_assert(std::is_same_v<typename vec::const_pointer, const int *>);
+  static_assert(std::is_same_v<typename vec::const_pointer, int const *>);
+  static_assert(std::is_same_v<typename vec::const_pointer, int const *>);
 }
 
 // Array iterators are pointers, so they cannot be constexpr for stack-local variables.
@@ -76,20 +76,26 @@ TEST(vect, construction)
   constexpr claws::vect<int, 4> vec6{1, 2, 3, 4};
 }
 
-TEST(vect, copy)
+TEST(vect, copy_assignment)
 {
-  constexpr claws::vect<int, 5> from{{1, 2, 3, 4, 5}};
-  claws::vect<int, 5> to(from);
+  constexpr claws::vect<int, 5> v1{1, 2, 3, 4, 5};
+  auto constexpr_context = [](const auto &v1) constexpr
+  {
+    claws::vect<int, 5> v2;
 
-  ASSERT_EQ(to, from);
+    v2 = v1;
+    return v2;
+  };
+
+  [[maybe_unused]] constexpr auto x = constexpr_context(v1);
 }
 
 TEST(vect, move)
 {
-  claws::vect<int, 5> from{{1, 2, 3, 4, 5}};
-  claws::vect<int, 5> to(std::move(from));
+  constexpr claws::vect<int, 5> from{{1, 2, 3, 4, 5}};
+  constexpr claws::vect<int, 5> to(std::move(from));
 
-  ASSERT_EQ(to, (claws::vect<int, 5>{{1, 2, 3, 4, 5}}));
+  static_assert(to == claws::vect<int, 5>{{1, 2, 3, 4, 5}});
 }
 
 namespace
