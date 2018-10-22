@@ -255,6 +255,30 @@ namespace claws
       return !(*this == other);
     }
 
+#define CLAWS_VECT_ORDER_OPERATOR_DEF(OP)                               \
+  template<typename U>                                                  \
+  constexpr bool operator OP(const vect<U, Size> &other) const noexcept \
+  {                                                                     \
+    auto it1 = begin();                                                 \
+    auto it2 = other.begin();                                           \
+                                                                        \
+    for (; it1 != end(); ++it1, ++it2)                                  \
+      {                                                                 \
+        if (*it1 OP * it2)                                              \
+          return true;                                                  \
+        if (*it2 OP * it1)                                              \
+          return false;                                                 \
+      }                                                                 \
+    return false;                                                       \
+  }
+
+    CLAWS_VECT_ORDER_OPERATOR_DEF(<);
+    CLAWS_VECT_ORDER_OPERATOR_DEF(<=);
+    CLAWS_VECT_ORDER_OPERATOR_DEF(>);
+    CLAWS_VECT_ORDER_OPERATOR_DEF(>=);
+
+#undef CLAWS_VECT_ORDER_OPERATOR_DEF
+
   private:
     template<typename U, typename Pred, size_t... indexes>
     constexpr auto compare_impl(vect<U, Size> const &other, Pred &&pred, std::index_sequence<indexes...>) const noexcept
@@ -275,6 +299,10 @@ namespace claws
   {                                                                                       \
     return compare(other, [](const auto &a, const auto &b) constexpr { return a OP b; }); \
   }
+
+    CLAWS_VECT_ORDER_COMPARATOR_DEF(==, equal);
+
+    CLAWS_VECT_ORDER_COMPARATOR_DEF(!=, not_equal);
 
     CLAWS_VECT_ORDER_COMPARATOR_DEF(<, less);
 
@@ -302,17 +330,17 @@ namespace claws
 
 #undef CLAWS_VECT_UNARY_OP_DEF
 
-#define CLAWS_VECT_NAMED_COMPONENT(NAME, INDEX)                           \
-  template<size_t _Size = Size, typename = std::enable_if_t<(_Size > 0)>> \
-  constexpr const_reference NAME() const noexcept                         \
-  {                                                                       \
-    return array[INDEX];                                                  \
-  }                                                                       \
-                                                                          \
-  template<size_t _Size = Size, typename = std::enable_if_t<(_Size > 0)>> \
-  constexpr reference NAME() noexcept                                     \
-  {                                                                       \
-    return array[INDEX];                                                  \
+#define CLAWS_VECT_NAMED_COMPONENT(NAME, INDEX)                               \
+  template<size_t _Size = Size, typename = std::enable_if_t<(_Size > INDEX)>> \
+  constexpr const_reference NAME() const noexcept                             \
+  {                                                                           \
+    return array[INDEX];                                                      \
+  }                                                                           \
+                                                                              \
+  template<size_t _Size = Size, typename = std::enable_if_t<(_Size > INDEX)>> \
+  constexpr reference NAME() noexcept                                         \
+  {                                                                           \
+    return array[INDEX];                                                      \
   }
 
     CLAWS_VECT_NAMED_COMPONENT(x, 0);
