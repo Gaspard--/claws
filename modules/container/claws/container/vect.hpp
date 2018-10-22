@@ -249,32 +249,42 @@ namespace claws
       return i == Size;
     }
 
-#define CLAWS_VECT_ORDER_OPERATOR_DEF(OP)                               \
-  template<typename U>                                                  \
-  constexpr bool operator OP(vect<U, Size> const &other) const noexcept \
-  {                                                                     \
-    auto it1 = begin();                                                 \
-    auto it2 = other.begin();                                           \
-                                                                        \
-    for (; it1 != end(); ++it1, ++it2)                                  \
-      {                                                                 \
-        if (*it1 OP * it2)                                              \
-          return true;                                                  \
-        if (*it2 OP * it1)                                              \
-          return false;                                                 \
-      }                                                                 \
-    return false;                                                       \
+    template<typename U>
+    constexpr bool operator!=(vect<U, Size> const &other) const noexcept
+    {
+      return !(*this == other);
+    }
+
+  private:
+    template<typename U, typename Pred, size_t... indexes>
+    constexpr auto compare_impl(vect<U, Size> const &other, Pred &&pred, std::index_sequence<indexes...>) const noexcept
+    {
+      return vect<bool, Size>{pred((*this)[indexes], other[indexes])...};
+    };
+
+  public:
+    template<typename U, typename Pred>
+    constexpr vect<bool, Size> compare(vect<U, Size> const &other, Pred &&pred) const noexcept
+    {
+      return compare_impl(other, std::forward<Pred>(pred), std::make_index_sequence<Size>{});
+    }
+
+#define CLAWS_VECT_ORDER_COMPARATOR_DEF(OP, NAME)                                         \
+  template<typename U>                                                                    \
+  constexpr vect<bool, Size> is_##NAME(vect<U, Size> const &other) const noexcept         \
+  {                                                                                       \
+    return compare(other, [](const auto &a, const auto &b) constexpr { return a OP b; }); \
   }
 
-    CLAWS_VECT_ORDER_OPERATOR_DEF(<);
+    CLAWS_VECT_ORDER_COMPARATOR_DEF(<, less);
 
-    CLAWS_VECT_ORDER_OPERATOR_DEF(<=);
+    CLAWS_VECT_ORDER_COMPARATOR_DEF(<=, less_or_equal);
 
-    CLAWS_VECT_ORDER_OPERATOR_DEF(>);
+    CLAWS_VECT_ORDER_COMPARATOR_DEF(>, greater);
 
-    CLAWS_VECT_ORDER_OPERATOR_DEF(>=);
+    CLAWS_VECT_ORDER_COMPARATOR_DEF(>=, greater_or_equal);
 
-#undef CLAWS_VECT_ORDER_OPERATOR_DEF
+#undef CLAWS_VECT_ORDER_COMPARATOR_DEF
 
 #define CLAWS_VECT_UNARY_OP_DEF(OP)                                       \
   constexpr vect<T, Size> operator OP() const                             \

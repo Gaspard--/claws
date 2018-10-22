@@ -36,10 +36,6 @@ TEST(vect, constexpr_correctness)
   static_assert(*it == 1);
 
   static_assert(static_vect == static_vect);
-  static_assert(!(static_vect < static_vect));
-  static_assert(!(static_vect > static_vect));
-  static_assert(static_vect <= static_vect);
-  static_assert(static_vect >= static_vect);
 }
 
 template<typename T, typename U>
@@ -140,4 +136,26 @@ TEST(vect, unary_operators)
   constexpr auto vec_opposite = -vec;
 
   static_assert(vec_opposite == claws::vect{{-1, -2, -3, -4}});
+}
+
+TEST(vect, comparators)
+{
+  constexpr claws::vect<int, 4> vec1{{1, 2, 3, 4}};
+  constexpr claws::vect<int, 4> vec2{{1, 2, 3, 5}};
+
+  constexpr auto result1 = vec1.is_greater(vec2);
+  static_assert(!result1.all());
+
+  constexpr auto result2 = vec1.is_greater_or_equal(vec1);
+  static_assert(result2.all());
+
+  constexpr auto result3 = vec1.is_less_or_equal(vec1);
+  static_assert(result3.all());
+
+  constexpr auto result4 = vec1.is_less(vec2);
+  static_assert(!result4.all());
+  static_assert(result4[3]);
+
+  constexpr auto result5 = vec1.is_less_or_equal(vec2);
+  static_assert(result5.all());
 }
