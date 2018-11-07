@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <type_traits>
 #include <utility>
+#include <iterator>
 #include <claws/algorithm/constexpr_algorithm.hpp>
 
 namespace claws
