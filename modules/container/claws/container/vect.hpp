@@ -245,7 +245,7 @@ namespace claws
     {
       size_t i = 0;
 
-      for (; i < Size && array[i] == other.array[i]; ++i)
+      for (; i < Size && array[i] == other[i]; ++i)
         ;
       return i == Size;
     }
